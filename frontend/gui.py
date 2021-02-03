@@ -14,7 +14,7 @@ https://help.pythonanywhere.com/pages/NoSuchFileOrDirectory/
 import tkinter as tk
 from PIL import ImageTk
 import os
-from calculations.intclass import DoCalculus  # Auto refer parent dir
+# from calculations.intclass import DoCalculus 
 
 class GUI:
     """GUI for integration script"""
@@ -26,14 +26,28 @@ class GUI:
         self.img_path = os.path.join(self.THIS_FOLDER, "imgs/icon.png")           # FIGURE THIS OUT
         self.icon = ImageTk.PhotoImage(file=self.img_path)
         self.master = master
-        self.frame = tk.Frame(self.master)
+        self.frame = tk.Frame(self.master, width=100, height=100)
         self.master.title("NMR Inte-great!")
         self.master.iconphoto(False, self.icon)
-        self.frame.pack()
+        self.frame.grid()
 
         # Widgets
-        self.title_input = tk.Entry()
+        self.title_label = tk.Label(self.master, 
+                                    text="Outfile Title:",
+                                    relief=tk.RAISED,
+                                    bg="floral white")
+        self.title_var = tk.StringVar(self.master, 
+                                      value="Input the title of the outfile")
+        self.title_input = tk.Entry(self.master, 
+                                    textvariable=self.title_var,
+                                    width=40, 
+                                    relief=tk.SUNKEN)
         self.lower_limit = tk.Entry() 
         self.upper_limit = tk.Entry()
         self.file = tk.Button()
+
+        # Geometry of Widgets
+        self.title_label.grid(row=0, column=0)
+        self.title_input.grid(row=0, column=1)
+        
 
