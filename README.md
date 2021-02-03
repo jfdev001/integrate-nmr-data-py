@@ -3,7 +3,10 @@ Basic Script to perform trapezoidal sum on NMR peak list data (*.asc)
 
 Documentation:
    Tkinter:
+   https://coderslegacy.com/python/python-gui/
+
    https://www.python-course.eu/tkinter_dialogs.php
+   
    https://wiki.python.org/moin/TkInter
 
 Questions:
@@ -19,6 +22,10 @@ Questions:
       Dir Path:
       https://help.pythonanywhere.com/pages/NoSuchFileOrDirectory/
 
+   string slicing:
+      https://www.programiz.com/python-programming/methods/string/find
+
+      https://www.educative.io/edpresso/how-do-you-reverse-a-string-in-python
 
 
 
