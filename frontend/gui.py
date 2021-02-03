@@ -33,20 +33,34 @@ class GUI:
                                     text="Outfile Title:",
                                     relief=tk.RAISED,
                                     bg="floral white")
-        self.title_input_var = tk.StringVar(self.master, 
-                                      value="")
-        self.title_input = tk.Entry(self.master, 
-                                    textvariable=self.title_input_var,
+        self.title_var = tk.StringVar(self.master, 
+                                      value=".txt")
+        self.title_entry = tk.Entry(self.master, 
+                                    textvariable=self.title_var,
                                     width=40, 
                                     relief=tk.SUNKEN)
 
         # Limits of integration
-        self.lower_limit_var = tk.DoubleVar(self.master)
-        self.lower_limit = tk.Entry(self.master) 
-        self.upper_limit_var = tk.DoubleVar(self.master)
-        self.upper_limit = tk.Entry(self.master)
+        self.upper_limit_label = tk.Label(self.master,
+                                          text="Upper Limit of Integration:",
+                                          relief=tk.RAISED,
+                                          bg="floral white")
+        self.upper_limit_var = tk.StringVar(self.master, value="")
+        self.upper_limit_entry = tk.Entry(self.master,
+                                          textvariable=self.upper_limit_var,
+                                          width=40, 
+                                          relief=tk.SUNKEN)
+        self.lower_limit_label = tk.Label(self.master,
+                                    text="Lower Limit of Integration:",
+                                    relief=tk.RAISED,
+                                    bg="floral white")
+        self.lower_limit_var = tk.StringVar(self.master, value="")
+        self.lower_limit_entry = tk.Entry(self.master,
+                                          textvariable=self.lower_limit_var,
+                                          width=40,
+                                          relief=tk.SUNKEN)
 
-        # File to analyze
+        # File dialog
         self.file = tk.Button(self.master)
         #-------End Define Widgets--------
 
@@ -56,8 +70,17 @@ class GUI:
 
     def grid_widgets(self):
         """Control the geometry of the Widgets."""
-        self.title_label.grid(row=0, column=0)
-        self.title_input.grid(row=0, column=1)
+        # Title
+        self.title_label.grid(row=0, column=0, sticky=tk.W+tk.E)
+        self.title_entry.grid(row=0, column=1)
+
+        # Limits of integration
+        self.upper_limit_label.grid(row=1, column=0)
+        self.upper_limit_entry.grid(row=1, column=1)
+        self.lower_limit_label.grid(row=2, column=0)
+        self.lower_limit_entry.grid(row=2, column=1)
+
+        # File dialog?
 
         
 

@@ -1,6 +1,4 @@
-"""Driver file.
-No need for __init__.py in this directory?
-"""
+"""Driver file."""
 
 from frontend.gui import GUI
 import tkinter as tk
