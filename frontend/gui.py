@@ -10,14 +10,13 @@ import os
 class GUI:
     """GUI for integration script"""
     def __init__(self, master=None):
-        """Initialize master frame and all widgets"""
+        """Initialize master Frame and define other Widgets."""
         # Master frame
         self.master = master
         self.frame = tk.Frame(self.master)
 
         # Set icon
         self.THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
-        self.PARENT_FOLDER = self.THIS_FOLDER[:self.THIS_FOLDER.find(__file__)]
         self.img_path = os.path.join(self.THIS_FOLDER, "imgs/icon.png")         
         self.icon = ImageTk.PhotoImage(file=self.img_path)
         self.master.iconphoto(False, self.icon)
@@ -28,7 +27,8 @@ class GUI:
         # Grid master frame
         self.frame.grid()
 
-        # Widgets #
+        # -------Define Widgets--------
+        # Title 
         self.title_label = tk.Label(self.master, 
                                     text="Outfile Title:",
                                     relief=tk.RAISED,
@@ -40,16 +40,17 @@ class GUI:
                                     width=40, 
                                     relief=tk.SUNKEN)
 
-
+        # Limits of integration
         self.lower_limit_var = tk.DoubleVar(self.master)
         self.lower_limit = tk.Entry(self.master) 
-
         self.upper_limit_var = tk.DoubleVar(self.master)
         self.upper_limit = tk.Entry(self.master)
 
+        # File to analyze
         self.file = tk.Button(self.master)
+        #-------End Define Widgets--------
 
-        # Grid Widgets to Screen
+        # Grid Widgets to screen
         self.grid_widgets()
 
 
