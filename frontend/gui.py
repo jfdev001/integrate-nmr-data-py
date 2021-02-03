@@ -1,13 +1,4 @@
-"""Tkinter interface for integrate NMR script.
-
-Icon Image:
-Requires png or at the very least a file that has not had
-it's extension changed.
-https://www.geeksforgeeks.org/iconphoto-method-in-tkinter-python/
-
-Dir Path:
-https://help.pythonanywhere.com/pages/NoSuchFileOrDirectory/
-"""
+"""Tkinter interface for integrate NMR script."""
 
 
 # TRY REMOVING __init__.py from nmr folder

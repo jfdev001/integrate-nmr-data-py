@@ -5,7 +5,24 @@ Documentation:
    Tkinter:
    https://www.python-course.eu/tkinter_dialogs.php
    https://wiki.python.org/moin/TkInter
-   
+
+Questions:
+   git:
+   https://stackoverflow.com/questions/5697750/what-exactly-does-the-u-do-git-push-u-origin-master-vs-git-push-origin-ma
+
+   gui:
+      Icon Image:
+      Requires png or at the very least a file that has not had
+      it's extension changed.
+      https://www.geeksforgeeks.org/iconphoto-method-in-tkinter-python/
+
+      Dir Path:
+      https://help.pythonanywhere.com/pages/NoSuchFileOrDirectory/
+
+
+
+
+
 
 Plans:
 1. https://matplotlib.org/3.1.3/tutorials/introductory/usage.html#sphx-glr-tutorials-introductory-usage-py    
