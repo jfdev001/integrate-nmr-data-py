@@ -1,6 +1,11 @@
 # integrate-nmr-data-py
 Basic Script to perform trapezoidal sum on NMR peak list data (*.asc)
 
+WHAT'S NEXT:
+-- Add button for data analysis, to the right of openfile
+   -- add error checking?
+-- modify calculations/ to class and perhaps do example of matplotlib
+
 Documentation:
    Tkinter:
    Canonical doc
