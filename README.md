@@ -1,6 +1,12 @@
 # integrate-nmr-data-py
 Basic Script to perform trapezoidal sum on NMR peak list data (*.asc)
 
+Documentation:
+   Tkinter:
+   https://www.python-course.eu/tkinter_dialogs.php
+   https://wiki.python.org/moin/TkInter
+   
+
 Plans:
 1. https://matplotlib.org/3.1.3/tutorials/introductory/usage.html#sphx-glr-tutorials-introductory-usage-py    
 2. Figure out how this integral is displayed!!
