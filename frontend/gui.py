@@ -74,7 +74,8 @@ class GUI:
         self.file_label = tk.Label(self.master, 
                                    textvariable=self.file_name_var,
                                    width=40,
-                                   bd=4)
+                                   bd=4,
+                                   wraplength=280)
         #-------End Define Widgets--------
 
         # Grid Widgets to screen

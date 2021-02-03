@@ -3,10 +3,13 @@ Basic Script to perform trapezoidal sum on NMR peak list data (*.asc)
 
 Documentation:
    Tkinter:
+   Canonical doc
+      http://tcl.tk/man/tcl8.5/TkCmd/options.htm#M-wraplength
+
    https://coderslegacy.com/python/python-gui/
 
    https://www.python-course.eu/tkinter_dialogs.php
-   
+
    https://wiki.python.org/moin/TkInter
 
 Questions:
