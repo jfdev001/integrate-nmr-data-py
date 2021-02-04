@@ -30,37 +30,50 @@ class GUI:
         self.frame.grid()
 
         # -------Define Widgets--------
+        # Label frame for "input widgets"
+        self.input_frame = tk.LabelFrame(self.master, 
+                                         text="Entry Frame",
+                                         padx=5,
+                                         pady=5)
+                    
+
         # Title 
-        self.title_label = tk.Label(self.master, 
+        self.title_label = tk.Label(self.input_frame, 
                                     text="Outfile Title:",
                                     relief=tk.RAISED,
                                     bg="floral white")
-        self.title_var = tk.StringVar(self.master, 
+        self.title_var = tk.StringVar(self.input_frame, 
                                       value=".txt")
-        self.title_entry = tk.Entry(self.master, 
+        self.title_entry = tk.Entry(self.input_frame, 
                                     textvariable=self.title_var,
                                     width=40, 
                                     relief=tk.SUNKEN)
 
         # Limits of integration
-        self.upper_limit_label = tk.Label(self.master,
+        self.upper_limit_label = tk.Label(self.input_frame,
                                           text="Upper Limit of Integration:",
                                           relief=tk.RAISED,
                                           bg="floral white")
-        self.upper_limit_var = tk.StringVar(self.master, value="")
-        self.upper_limit_entry = tk.Entry(self.master,
+        self.upper_limit_var = tk.StringVar(self.input_frame, value="")
+        self.upper_limit_entry = tk.Entry(self.input_frame,
                                           textvariable=self.upper_limit_var,
                                           width=40, 
                                           relief=tk.SUNKEN)
-        self.lower_limit_label = tk.Label(self.master,
+        self.lower_limit_label = tk.Label(self.input_frame,
                                     text="Lower Limit of Integration:",
                                     relief=tk.RAISED,
                                     bg="floral white")
-        self.lower_limit_var = tk.StringVar(self.master, value="")
-        self.lower_limit_entry = tk.Entry(self.master,
+        self.lower_limit_var = tk.StringVar(self.input_frame, value="")
+        self.lower_limit_entry = tk.Entry(self.input_frame,
                                           textvariable=self.lower_limit_var,
                                           width=40,
                                           relief=tk.SUNKEN)
+
+        # Label Frame for buttons and file rw
+        self.analysis_frame = tk.LabelFrame(self.master, 
+                                            text="Analysis Frame",
+                                            padx=5,
+                                            pady=5)
 
         # File dialog
         self.home = str(Path.home()) 
@@ -102,6 +115,10 @@ class GUI:
 
     def grid_widgets(self):
         """Control the geometry of the Widgets."""
+        # LabelFrames
+        self.input_frame.grid(row=0, column=0)
+        self.analysis_frame.grid(row=1, column=0)
+
         # Title
         self.title_label.grid(row=0, column=0, sticky=tk.W+tk.E, 
                               **self.padding)

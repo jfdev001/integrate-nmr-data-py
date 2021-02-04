@@ -4,6 +4,7 @@ Basic Script to perform trapezoidal sum on NMR peak list data (*.asc)
 WHAT'S NEXT:
 -- Add button for data analysis, to the right of openfile
    -- add error checking?
+-- Best practice for root=? of control variable?
 -- modify calculations/ to class and perhaps do example of matplotlib
 
 Documentation:
@@ -18,6 +19,8 @@ Documentation:
    https://wiki.python.org/moin/TkInter
 
 Questions:
+   tkinter frames:
+   https://stackoverflow.com/questions/9759496/aligning-widgets-using-grid-between-multiple-tkinter-labelframes
    git:
    https://stackoverflow.com/questions/5697750/what-exactly-does-the-u-do-git-push-u-origin-master-vs-git-push-origin-ma
 
