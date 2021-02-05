@@ -1,7 +1,6 @@
 """Tkinter interface for integrate NMR script."""
 
 
-# TRY REMOVING __init__.py from nmr folder
 import tkinter as tk 
 import tkinter.filedialog as fd
 from PIL import ImageTk
@@ -30,56 +29,57 @@ class GUI:
         self.frame.grid()
 
         # -------Define Widgets--------
-        # Label frame for "input widgets"
+        # Label frames
         self.input_frame = tk.LabelFrame(self.master, 
                                          text="Entry Frame",
                                          padx=5,
-                                         pady=5)
-                    
-
-        # Title 
-        self.title_label = tk.Label(self.input_frame, 
-                                    text="Outfile Title:",
-                                    relief=tk.RAISED,
-                                    bg="floral white")
-        self.title_var = tk.StringVar(self.input_frame, 
-                                      value=".txt")
-        self.title_entry = tk.Entry(self.input_frame, 
-                                    textvariable=self.title_var,
-                                    width=40, 
-                                    relief=tk.SUNKEN)
-
-        # Limits of integration
-        self.upper_limit_label = tk.Label(self.input_frame,
-                                          text="Upper Limit of Integration:",
-                                          relief=tk.RAISED,
-                                          bg="floral white")
-        self.upper_limit_var = tk.StringVar(self.input_frame, value="")
-        self.upper_limit_entry = tk.Entry(self.input_frame,
-                                          textvariable=self.upper_limit_var,
-                                          width=40, 
-                                          relief=tk.SUNKEN)
-        self.lower_limit_label = tk.Label(self.input_frame,
-                                    text="Lower Limit of Integration:",
-                                    relief=tk.RAISED,
-                                    bg="floral white")
-        self.lower_limit_var = tk.StringVar(self.input_frame, value="")
-        self.lower_limit_entry = tk.Entry(self.input_frame,
-                                          textvariable=self.lower_limit_var,
-                                          width=40,
-                                          relief=tk.SUNKEN)
-
-        # Label Frame for buttons and file rw
+                                         pady=10)
         self.analysis_frame = tk.LabelFrame(self.master, 
                                             text="Analysis Frame",
                                             padx=5,
                                             pady=5)
+                    
+
+        # Title 
+        self.title_label = tk.Label(self.master, 
+                                    text="Outfile Title:",
+                                    relief=tk.RAISED,
+                                    bg="floral white")
+        self.title_var = tk.StringVar(self.master, 
+                                      value=".txt")
+        self.title_entry = tk.Entry(self.master, 
+                                    textvariable=self.title_var,
+                                    width=40, 
+                                    relief=tk.SUNKEN)
+
+        # Upper limit of integration
+        self.upper_limit_label = tk.Label(self.master,
+                                          text="Upper Limit of Integration:",
+                                          relief=tk.RAISED,
+                                          bg="floral white")
+        self.upper_limit_var = tk.StringVar(self.master, value="")
+        self.upper_limit_entry = tk.Entry(self.master,
+                                          textvariable=self.upper_limit_var,
+                                          width=40, 
+                                          relief=tk.SUNKEN)
+
+        # Lower limit of integration
+        self.lower_limit_label = tk.Label(self.master,
+                                    text="Lower Limit of Integration:",
+                                    relief=tk.RAISED,
+                                    bg="floral white")
+        self.lower_limit_var = tk.StringVar(self.master, value="")
+        self.lower_limit_entry = tk.Entry(self.master,
+                                          textvariable=self.lower_limit_var,
+                                          width=40,
+                                          relief=tk.SUNKEN)
 
         # File dialog
-        self.home = str(Path.home()) 
+        self.home = str(Path.home())  # Path to home directory
         self.file_types = (("asc files", "*.asc"), ("all files", "*.*"))
         self.file_path = None
-        self.file_name_var = tk.StringVar(self.master, value="File Name Displays Here")
+        self.file_name_var = tk.StringVar(self.master, 
+                                          value="File Name Displays Here")
         self.file_button = tk.Button(self.master, 
                               text="Click to Choose .ASC File",
                               command=self.fdialog,
@@ -121,32 +121,38 @@ class GUI:
 
         # Title
         self.title_label.grid(row=0, column=0, sticky=tk.W+tk.E, 
-                              **self.padding)
-        self.title_entry.grid(row=0, column=1, **self.padding, columnspan=2)
+                              **self.padding, in_=self.input_frame)
+        self.title_entry.grid(row=0, column=1, **self.padding, columnspan=2,
+                              in_=self.input_frame)
 
-        # Limits of integration
+        # Upper limit of integration
         self.upper_limit_label.grid(row=1, column=0, **self.padding, 
-                                    sticky=tk.W+tk.E)
+                                    sticky=tk.W+tk.E, in_=self.input_frame)
         self.upper_limit_entry.grid(row=1, column=1, **self.padding, 
-                                    columnspan=2)
+                                    columnspan=2, in_=self.input_frame)
+
+        # Lower limit of integration
         self.lower_limit_label.grid(row=2, column=0, **self.padding, 
-                                    sticky=tk.W+tk.E)
+                                    sticky=tk.W+tk.E, in_=self.input_frame )
         self.lower_limit_entry.grid(row=2, column=1, **self.padding,
-                                    columnspan=2)
+                                    columnspan=2, in_=self.input_frame)
 
         # File dialog button
         self.file_button.grid(row=3, column=0, sticky=tk.W,
-                              ipady=5, ipadx=5, padx=5, pady=5)
+                              ipady=5, ipadx=5, padx=5, pady=5, 
+                              in_=self.analysis_frame)
         self.file_label.grid(row=4, column=0, columnspan=3, sticky=tk.W+tk.E,
-                             **self.padding)
+                             **self.padding, in_=self.analysis_frame)
 
         # Data analysis button
         self.analysis_button.grid(row=3, column=1, sticky=tk.W,
-                                  ipady=5, ipadx=5, padx=5, pady=5)
+                                  ipady=5, ipadx=5, padx=5, pady=5,
+                                  in_=self.analysis_frame)
 
         # Save button
         self.save_button.grid(row=3, column=2, sticky=tk.W,
-                              ipady=5, ipadx=5, padx=5, pady=5)
+                              ipady=5, ipadx=5, padx=5, pady=5,
+                              in_=self.analysis_frame)
 
     
     def fdialog(self):
