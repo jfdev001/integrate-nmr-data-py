@@ -17,7 +17,7 @@ class GUI:
         self.master = master
         self.frame = tk.Frame(self.master)
 
-        # Tuple of figure and outfile text returned from NmrAnalyzer
+        # Tuple (figure photoimage, str log) returned from NmrAnalyzer
         self.analysis_result = None
 
         # Set icon
@@ -175,5 +175,5 @@ class GUI:
     def do_analysis(self):
         """Instantiate NmrAnalysis and return plots"""
         analyzer = NmrAnalyzer(self.lower_limit_var, self.upper_limit_var,
-                               self.file_path)
+                               self.file_path, self.file_name_var)
         self.analysis_result = analyzer.proc_data()

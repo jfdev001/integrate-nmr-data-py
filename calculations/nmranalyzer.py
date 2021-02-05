@@ -1,21 +1,24 @@
 """Store attributes passed from GUI and perform integration."""
 
+import tkinter as tk
 from datetime import datetime
+from PIL import Image, ImageTk
+import io
 import numpy as np
 import matplotlib.pyplot as plt
-import tkinter as tk
 
 class NmrAnalyzer:
     """Encapsulates all NMR related integration data and methods."""
-    def __init__(self, lower_lim, upper_lim, file_path):
-        """Analylsis attributes """ 
+    def __init__(self, lower_lim, upper_lim, file_path, file_name):
+        """Analysis attributes """ 
         self.__lower_limit = float(lower_lim.get())  # tkinter var
         self.__upper_lim = float(upper_lim.get())  # tkinter var
         self.__file_path = file_path
+        self.__file_name = file_name.get()  # tkinter var
         self.__x_arr = []  # Chemical shift ppm
         self.__y_arr = []  # Peak intensity
-        self.area = None
-        self.__plot = None
+        self.__area = None
+        self.__figure = None
         self.__log_text = None
 
 
@@ -26,13 +29,13 @@ class NmrAnalyzer:
             self.__build_arrays(fobj)
 
         # Get the log file
-        outfile_text = self.__log()
+        self.__log_text = self.__log()
 
         # Get the matplotlib plot 
-        figure = self.__plot()
+        self.__figure = self.__plot()
 
         # Return tuple
-        return (figure, outfile_text)
+        return (self.__figure, self.__log_text)
   
 
     def __build_arrays(self, fobj):
@@ -53,7 +56,22 @@ class NmrAnalyzer:
 
     def __plot(self):
         """Matplotlib to plot the figure.""" 
-        return plot 
+        # Instantiate Figure and Axes objects
+        fig, ax = plt.subplots()
+
+        # Plot Axes object to Figure and label it
+        ax.plot(self.__x_arr, self.__y_arr)
+        ax.set_xlabel("Chemical Shift")
+        ax.set_ylabel("Signal Intensity")
+        ax.set_title(f"Plot of {self.__file_name}")
+
+        # Convert plot to PhotoImage object
+        buffer = io.BytesIO()  # Reserve memory for figure
+        fig.savefig(buffer)    # Save figure in that memory
+        plot_img = ImageTk.PhotoImage(Image.open(buffer))  # Use w/ tk
+
+        # Return the PhotoImage object
+        return plot_img
 
     
     def __log(self):
@@ -63,11 +81,12 @@ class NmrAnalyzer:
         self.__y_arr.reverse()
 
         # Area under the curve using trapezoidal integration
-        self.area = np.trapz(y=self.__y_arr, x=self.__x_arr)
+        self.__area = np.trapz(y=self.__y_arr, x=self.__x_arr)
 
         # Outfile text
         now = str(datetime.now())[:str(datetime.now()).index(".")]
-        text = f"FILE PATH,TIME,AREA\n{self.__file_path},{now},{self.area}\n"
+        text = f"FILE PATH,TIME,AREA\n{self.__file_path},{now},{self.__area}\n"
 
+        # Return outfile text
         return text
 

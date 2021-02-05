@@ -18,7 +18,15 @@ Documentation:
 
    https://wiki.python.org/moin/TkInter
 
+   Matplotlib:
+   https://matplotlib.org/tutorials/introductory/usage.html#sphx-glr-tutorials-introductory-usage-py
+
+   
+
 Questions:
+   Get temp matplotlib figure:
+   https://stackoverflow.com/questions/57316491/how-to-convert-matplotlib-figure-to-pil-image-object-without-saving-image
+
    kwargs and class:
    https://stackoverflow.com/questions/8187082/how-can-you-set-class-attributes-from-variable-arguments-kwargs-in-python
 
