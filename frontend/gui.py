@@ -40,8 +40,10 @@ class GUI:
                                             pady=5)
                     
 
-        # Title 
-        self.entry_style = {"relief": tk.SUNKEN, "width": 60}
+        # Entry Widget styles
+        self.entry_style = {"relief": tk.SUNKEN, "width": 49}
+
+        # Title
         self.title_label = tk.Label(self.master, 
                                     text="Outfile Title:",
                                     relief=tk.RAISED,
@@ -82,7 +84,6 @@ class GUI:
                               text="Click to Choose .ASC File",
                               command=self.fdialog,
                               bg = "bisque")
-                              #width=24)
         self.file_label = tk.Label(self.master, 
                                    textvariable=self.file_name_var,
                                    width=40,
@@ -115,7 +116,7 @@ class GUI:
         """Control the geometry of the Widgets."""
         # LabelFrames
         self.input_frame.grid(row=0, column=0)
-        self.analysis_frame.grid(row=1, column=0)
+        self.analysis_frame.grid(row=1, column=0, sticky=tk.W)
 
         # Title
         self.title_label.grid(row=0, column=0, sticky=tk.W+tk.E, 
