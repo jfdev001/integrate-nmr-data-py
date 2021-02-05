@@ -26,7 +26,7 @@ class GUI:
         self.master.title("NMR Inte-great!")
 
         # Grid master frame
-        self.frame.grid()
+        self.frame.grid(sticky=tk.N + tk.S + tk.E + tk.W)
 
         # -------Define Widgets--------
         # Label frames
@@ -41,6 +41,7 @@ class GUI:
                     
 
         # Title 
+        self.entry_style = {"relief": tk.SUNKEN, "width": 60}
         self.title_label = tk.Label(self.master, 
                                     text="Outfile Title:",
                                     relief=tk.RAISED,
@@ -49,8 +50,7 @@ class GUI:
                                       value=".txt")
         self.title_entry = tk.Entry(self.master, 
                                     textvariable=self.title_var,
-                                    width=40, 
-                                    relief=tk.SUNKEN)
+                                    **self.entry_style)
 
         # Upper limit of integration
         self.upper_limit_label = tk.Label(self.master,
@@ -60,8 +60,7 @@ class GUI:
         self.upper_limit_var = tk.StringVar(self.master, value="")
         self.upper_limit_entry = tk.Entry(self.master,
                                           textvariable=self.upper_limit_var,
-                                          width=40, 
-                                          relief=tk.SUNKEN)
+                                          **self.entry_style)
 
         # Lower limit of integration
         self.lower_limit_label = tk.Label(self.master,
@@ -71,8 +70,7 @@ class GUI:
         self.lower_limit_var = tk.StringVar(self.master, value="")
         self.lower_limit_entry = tk.Entry(self.master,
                                           textvariable=self.lower_limit_var,
-                                          width=40,
-                                          relief=tk.SUNKEN)
+                                          **self.entry_style)
 
         # File dialog
         self.home = str(Path.home())  # Path to home directory
