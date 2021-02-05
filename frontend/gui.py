@@ -5,6 +5,7 @@ import tkinter.filedialog as fd
 from PIL import ImageTk
 import os
 from pathlib import Path
+from calculations.nmranalyzer import NmrAnalyzer
 # from calculations.intclass import DoCalculus 
 
 
@@ -15,6 +16,9 @@ class GUI:
         # Master frame
         self.master = master
         self.frame = tk.Frame(self.master)
+
+        # Tuple of figure and outfile text returned from NmrAnalyzer
+        self.analysis_result = None
 
         # Set icon
         self.THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
@@ -94,7 +98,7 @@ class GUI:
         # Analyze button
         self.analysis_button = tk.Button(self.master,
                                          text="Click to Analyze Data",
-                                         command=None,
+                                         command=self.do_analysis,
                                          bg="bisque")
                                          #width=24)
 
@@ -168,3 +172,8 @@ class GUI:
         self.file_name_var.set(fname)
 
         
+    def do_analysis(self):
+        """Instantiate NmrAnalysis and return plots"""
+        analyzer = NmrAnalyzer(self.lower_limit_var, self.upper_limit_var,
+                               self.file_path)
+        self.analysis_result = analyzer.proc_data()

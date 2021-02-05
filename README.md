@@ -19,6 +19,9 @@ Documentation:
    https://wiki.python.org/moin/TkInter
 
 Questions:
+   kwargs and class:
+   https://stackoverflow.com/questions/8187082/how-can-you-set-class-attributes-from-variable-arguments-kwargs-in-python
+
    tkinter frames:
    https://stackoverflow.com/questions/9759496/aligning-widgets-using-grid-between-multiple-tkinter-labelframes
    git:
