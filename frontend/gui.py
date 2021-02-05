@@ -1,12 +1,12 @@
 """Tkinter interface for integrate NMR script."""
 
-
 import tkinter as tk 
 import tkinter.filedialog as fd
 from PIL import ImageTk
 import os
 from pathlib import Path
 # from calculations.intclass import DoCalculus 
+
 
 class GUI:
     """GUI for integration script"""
