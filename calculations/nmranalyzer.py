@@ -14,6 +14,7 @@ class NmrAnalyzer:
         self.__file_path = file_path
         self.__x_arr = []  # Chemical shift ppm
         self.__y_arr = []  # Peak intensity
+        self.area = None
         self.__plot = None
         self.__log_text = None
 
@@ -57,5 +58,16 @@ class NmrAnalyzer:
     
     def __log(self):
         """Integrates and returns outfile text."""
+        # Reverse x & y list since np.trapz assumes ascending x & y
+        self.__x_arr.reverse()
+        self.__y_arr.reverse()
+
+        # Area under the curve using trapezoidal integration
+        self.area = np.trapz(y=self.__y_arr, x=self.__x_arr)
+
+        # Outfile text
+        now = str(datetime.now())[:str(datetime.now()).index(".")]
+        text = f"FILE PATH,TIME,AREA\n{self.__file_path},{now},{self.area}\n"
+
         return text
 
