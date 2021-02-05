@@ -177,3 +177,7 @@ class GUI:
         analyzer = NmrAnalyzer(self.lower_limit_var, self.upper_limit_var,
                                self.file_path, self.file_name_var)
         self.analysis_result = analyzer.proc_data()
+
+        # Create img label to test
+        self.img_label = tk.Label(self.master, 
+                                  image=self.analysis_result[0]).grid(row=2, column=0)
