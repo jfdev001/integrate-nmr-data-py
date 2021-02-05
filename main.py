@@ -1,11 +1,11 @@
 """Driver file."""
 
-from frontend.gui import GUI
+from frontend.gui import MainApp
 import tkinter as tk
 
 def main():
     root = tk.Tk()
-    app = GUI(root)
+    app = MainApp(root)
     root.mainloop()
 
 if __name__ == "__main__":

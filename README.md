@@ -6,6 +6,9 @@ WHAT'S NEXT:
    -- add error checking?
 -- Best practice for root=? of control variable?
 -- modify calculations/ to class and perhaps do example of matplotlib
+-- reorganize each "section" into it's own class.
+   example class EntryLabelFrame(MainApp)
+   example class AnalysisLabelFrame(MainApp)
 
 Documentation:
    Tkinter:
@@ -48,9 +51,6 @@ Questions:
       https://www.programiz.com/python-programming/methods/string/find
 
       https://www.educative.io/edpresso/how-do-you-reverse-a-string-in-python
-
-
-
 
 
 Plans:
