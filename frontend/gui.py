@@ -76,7 +76,7 @@ class GUI:
 
         # File dialog
         self.home = str(Path.home())  # Path to home directory
-        self.file_types = (("asc files", "*.asc"), ("all files", "*.*"))
+        self.file_types = (("asc files", "*.asc"),)
         self.file_path = None
         self.file_name_var = tk.StringVar(self.master, 
                                           value="File Name Displays Here")
@@ -156,10 +156,15 @@ class GUI:
     
     def fdialog(self):
         """Popup for file dialog and set file path/name"""
+        # Dialog
         self.file_path = fd.askopenfilename(title="Select ASC file",
                                                   initialdir=self.home,
                                                   filetypes=self.file_types)
+
+        # Set the file name
         fname = "".join(reversed(self.file_path[
                                     -1:self.file_path.rfind("/"):-1]))
+
         self.file_name_var.set(fname)
+
         
