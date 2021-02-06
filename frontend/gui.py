@@ -85,7 +85,7 @@ class MainApp:
                                           value="File Name Displays Here")
         self.file_button = tk.Button(self.master, 
                               text="Click to Choose .ASC File",
-                              command=self.fdialog,
+                              command=self.opendialog,
                               bg = "bisque")
         self.file_label = tk.Label(self.master, 
                                    textvariable=self.file_name_var,
@@ -157,7 +157,7 @@ class MainApp:
                               in_=self.analysis_labelframe)
 
     
-    def fdialog(self):
+    def opendialog(self):
         """Popup for file dialog and set file path/name"""
         # Dialog
         self.file_path = fd.askopenfilename(title="Select ASC file",
@@ -181,12 +181,12 @@ class MainApp:
         self.analysis_result = analyzer.proc_data()
 
         # Create new window for matplotlib figure
-        self.__new_window()
+        self.new_window()
 
         return None
 
 
-    def __new_window(self):
+    def new_window(self):
         """Create the window for the matplotlib figure.
 
         This is analagous to tk.Frame(self.master) where 
@@ -194,7 +194,7 @@ class MainApp:
         window instance under the existing tk.Tk() object versus 
         creating a completely new tk.Tk() object.
         """
-        self.__analysis_window = AnalysisWindow(tk.Toplevel(self.master), 
+        self.analysis_window = AnalysisWindow(tk.Toplevel(self.master), 
                                                 self.analysis_result)
 
         return None
