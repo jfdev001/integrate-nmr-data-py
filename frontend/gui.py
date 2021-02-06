@@ -1,4 +1,8 @@
-"""GUI for processing nmr data, plotting it, and writing it to disk."""
+"""GUI for processing nmr data, plotting it, and writing it to disk.
+Each section of the main window (MainApp) is divided into two classes.
+The window which is instantiated as a result of data analysis is
+also a separate class.
+"""
 
 import tkinter as tk 
 import tkinter.filedialog as fd
@@ -11,7 +15,7 @@ from calculations.nmranalyzer import NmrAnalyzer
 class MainApp:
     """GUI for integration script."""
     def __init__(self, master=None):
-        """Initialize master Frame and define other Widgets."""
+        """Initialize master Frame and instantiate other Widgets."""
         # Master frame
         self.master = master
         self.frame = tk.Frame(self.master)
@@ -23,13 +27,19 @@ class MainApp:
         self.THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
         self.img_path = os.path.join(self.THIS_FOLDER, "imgs/icon.png") 
         self.icon = ImageTk.PhotoImage(file=self.img_path)
-        self.master.iconphoto(False, self.icon)
+        self.master.iconphoto(True, self.icon)
 
         # Set title
         self.master.title("NMR Inte-great!")
 
         # Grid master frame
         self.frame.grid(sticky=tk.N + tk.S + tk.E + tk.W)
+
+        # Instantiate Widgets associated with this window
+        self.entry_section =  EntrySection(self.master)
+        self.analysis_section = AnalysisSection(self.master, 
+                                              self.entry_section.lower_lim_var,
+                                              self.entry_section.upper_lim_var)
 
         # Grid Widgets to screen
         self.padding = {"padx": 2, "pady": 2, "ipady": 2, "ipadx": 2}
@@ -39,77 +49,69 @@ class MainApp:
     def grid_widgets(self):
         """Control the geometry of the Widgets."""
         # LabelFrames
-        self.input_frame.grid(row=0, column=0)
-        self.analysis_labelframe.grid(row=1, column=0, sticky=tk.W)
+        self.entry_section.frame.grid(row=0, column=0, sticky=tk.W)
+        self.analysis_section.frame.grid(row=1, column=0)
 
         # Title
-        self.title_label.grid(row=0, column=0, sticky=tk.W+tk.E, 
-                              **self.padding, in_=self.input_frame)
-        self.title_entry.grid(row=0, column=1, **self.padding, columnspan=2,
-                              in_=self.input_frame)
+        self.entry_section.title_label.grid(row=0, column=0, sticky=tk.W+tk.E, 
+                                            **self.padding, 
+                                            in_=self.entry_section.frame)
+        self.entry_section.title_entry.grid(row=0, column=1, **self.padding, 
+                                            columnspan=2, 
+                                            in_=self.entry_section.frame)
 
         # Upper limit of integration
-        self.upper_limit_label.grid(row=1, column=0, **self.padding, 
-                                    sticky=tk.W+tk.E, in_=self.input_frame)
-        self.upper_limit_entry.grid(row=1, column=1, **self.padding, 
-                                    columnspan=2, in_=self.input_frame)
+        self.entry_section.upper_lim_label.grid(row=1, column=0, 
+                                                **self.padding,  
+                                                sticky=tk.W+tk.E, 
+                                                in_=self.entry_section.frame)
+        self.entry_section.upper_lim_entry.grid(row=1, column=1, 
+                                                **self.padding, 
+                                                columnspan=2, 
+                                                in_=self.entry_section.frame)
 
         # Lower limit of integration
-        self.lower_limit_label.grid(row=2, column=0, **self.padding, 
-                                    sticky=tk.W+tk.E, in_=self.input_frame )
-        self.lower_limit_entry.grid(row=2, column=1, **self.padding,
-                                    columnspan=2, in_=self.input_frame)
+        self.entry_section.lower_lim_label.grid(row=2, column=0, 
+                                                **self.padding, 
+                                                sticky=tk.W+tk.E, 
+                                                in_=self.entry_section.frame )
+        self.entry_section.lower_lim_entry.grid(row=2, column=1, 
+                                                **self.padding,
+                                                columnspan=2,
+                                                 in_=self.entry_section.frame)
 
         # File dialog button
-        self.file_button.grid(row=3, column=0, sticky=tk.W,
-                              ipady=5, ipadx=5, padx=5, pady=5, 
-                              in_=self.analysis_labelframe)
-        self.file_label.grid(row=4, column=0, columnspan=3, sticky=tk.W+tk.E,
-                             **self.padding, in_=self.analysis_labelframe)
+        self.analysis_section.file_button.grid(row=3, column=0, sticky=tk.W,
+                                               ipady=5, ipadx=5, padx=5, pady=5, 
+                                               in_=self.analysis_section.frame)
+        self.analysis_section.file_label.grid(row=4, column=0, columnspan=2, 
+                                              sticky=tk.W+tk.E, **self.padding, 
+                                              in_=self.analysis_section.frame)
 
         # Data analysis button
-        self.analysis_button.grid(row=3, column=1, sticky=tk.W,
-                                  ipady=5, ipadx=5, padx=5, pady=5,
-                                  in_=self.analysis_labelframe)
-
-        # Save button
-        self.save_button.grid(row=3, column=2, sticky=tk.W,
-                              ipady=5, ipadx=5, padx=5, pady=5,
-                              in_=self.analysis_labelframe)
+        self.analysis_section.analysis_button.grid(row=3, column=1, sticky=tk.W,
+                                              ipady=5, ipadx=5, padx=5, pady=5,
+                                              in_=self.analysis_section.frame)
 
 
-    def new_window(self):
-        """Create the window for the matplotlib figure.
-
-        This is analagous to tk.Frame(self.master) where 
-        self.master = tk.Tk(). Toplevel allows for the creation of a 
-        window instance under the existing tk.Tk() object versus 
-        creating a completely new tk.Tk() object.
-        """
-        self.analysis_window = AnalysisWindow(tk.Toplevel(self.master), 
-                                                self.analysis_result)
-
-        return None
-
-
-class EntryFrame:
+class EntrySection:
     """Encapsulates Widgets for 'Entry Frame' LabelFrame.
 
-    This class is bound to the MainApp window.
+    This class is bound to the MainApp master.
     """
-    def __init__(self, mainappwindow=None):
+    def __init__(self, mainappmaster=None):
         """Define Widgets for this LabelFrame."""
         # Master of MainApp is also master of this class
-        self.master = mainappwindow
+        self.master = mainappmaster
 
         # LabelFrame
-        self.entry_frame = tk.LabelFrame(self.master, 
+        self.frame = tk.LabelFrame(self.master, 
                                     text="Entry Frame",
                                     padx=5,
                                     pady=10)
 
         # Entry Widget styles
-        self.entry_style = {"relief": tk.SUNKEN, "width": 49}
+        self.style = {"relief": tk.SUNKEN, "width": 49}
 
         # Title
         self.title_label = tk.Label(self.master, 
@@ -120,44 +122,46 @@ class EntryFrame:
                                       value=".txt")
         self.title_entry = tk.Entry(self.master, 
                                     textvariable=self.title_var,
-                                    **self.entry_style)
+                                    **self.style)
 
         # Upper limit of integration
-        self.upper_limit_label = tk.Label(self.master,
+        self.upper_lim_label = tk.Label(self.master,
                                           text="Upper Limit of Integration:",
                                           relief=tk.RAISED,
                                           bg="floral white")
-        self.upper_limit_var = tk.StringVar(self.master, value="")
-        self.upper_limit_entry = tk.Entry(self.master,
-                                          textvariable=self.upper_limit_var,
-                                          **self.entry_style)
+        self.upper_lim_var = tk.StringVar(self.master, value=None)
+        self.upper_lim_entry = tk.Entry(self.master,
+                                          textvariable=self.upper_lim_var,
+                                          **self.style)
 
         # Lower limit of integration
-        self.lower_limit_label = tk.Label(self.master,
+        self.lower_lim_label = tk.Label(self.master,
                                     text="Lower Limit of Integration:",
                                     relief=tk.RAISED,
                                     bg="floral white")
-        self.lower_limit_var = tk.StringVar(self.master, value="")
-        self.lower_limit_entry = tk.Entry(self.master,
-                                          textvariable=self.lower_limit_var,
-                                          **self.entry_style)
+        self.lower_lim_var = tk.StringVar(self.master, value=None)
+        self.lower_lim_entry = tk.Entry(self.master,
+                                          textvariable=self.lower_lim_var,
+                                          **self.style)
 
 
-class AnalysisFrame:
+class AnalysisSection:
     """Encapsulates Widgets for 'Analysis Frame' LabelFrame.
 
-    This class is bound to the MainApp window.
+    This class is bound to the MainApp master.
     """
-    def __init__(self, mainappwindow=None):
+    def __init__(self, mainappmaster=None, lower_lim=None, upper_lim=None):
         """Define widgets for this LabelFrame."""
         # Master of MainApp is also master of this class
-        self.master = mainappwindow
+        self.master = mainappmaster
+
+        # Limits
+        self.lower_lim = lower_lim
+        self.upper_lim = upper_lim
 
         # LabelFrame
-        self.analysis_labelframe = tk.LabelFrame(self.master, 
-                                            text="Analysis Frame",
-                                            padx=5,
-                                            pady=5) 
+        self.frame = tk.LabelFrame(self.master, text="Analysis Frame", 
+                                   padx=5, pady=5, width=40) 
         
         # File dialog
         self.home = str(Path.home())  # Path to home directory
@@ -167,7 +171,7 @@ class AnalysisFrame:
                                           value="File Name Displays Here")
         self.file_button = tk.Button(self.master, 
                               text="Click to Choose .ASC File",
-                              command=self.opendialog,
+                              command=self.open_dialog,
                               bg = "bisque")
         self.file_label = tk.Label(self.master, 
                                    textvariable=self.file_name_var,
@@ -183,7 +187,7 @@ class AnalysisFrame:
                                          bg="bisque")
 
 
-    def opendialog(self):
+    def open_dialog(self):
         """Popup for file dialog and set file path/name"""
         # Dialog
         self.file_path = fd.askopenfilename(title="Select ASC file",
@@ -202,8 +206,10 @@ class AnalysisFrame:
     def do_analysis(self):
         """Instantiate NmrAnalysis and return plots."""
         # Instantiate NmrAnalyzer
-        analyzer = NmrAnalyzer(self.lower_limit_var, self.upper_limit_var,
+        analyzer = NmrAnalyzer(self.lower_lim, self.upper_lim,
                                self.file_path, self.file_name_var)
+
+        # Tuple (figure PhotoImage, str outfile) result                       
         self.analysis_result = analyzer.proc_data()
 
         # Create new window for matplotlib figure
@@ -212,16 +218,32 @@ class AnalysisFrame:
         return None
 
 
+    def new_window(self):
+        """Create the window for the matplotlib figure.
+
+        This is analagous to tk.Frame(self.master) where 
+        self.master = tk.Tk(). Toplevel allows for the creation of a 
+        window instance under the existing tk.Tk() object versus 
+        creating a completely new tk.Tk() object.
+        """
+        self.analysis_window = AnalysisWindow(tk.Toplevel(self.master), 
+                                                self.analysis_result)
+
+        return None
+
+
 class AnalysisWindow:
-    """Displays the graph and should have a menu."""
-    def __init__(self, window=None, analysis_result=None):
+    """Displays the graph and should have a menu.
+    This is a window initialized using the tk.Toplevel Widget.
+    """
+    def __init__(self, newwindow=None, analysis_result=None):
         """Initialize new analysis window and some configuration."""
         # Control window
-        self.window = window
-        self.frame = tk.Frame(self.window)
+        self.newwindow = newwindow
+        self.frame = tk.Frame(self.newwindow)
 
         # Title
-        self.window.title("Data Analysis Window")
+        self.newwindow.title("Data Analysis Window")
 
         # Pack the window
         self.frame.pack()
@@ -230,7 +252,7 @@ class AnalysisWindow:
         self.analysis_result = analysis_result
 
         # Plot label
-        self.plot_label = tk.Label(self.window, 
+        self.plot_label = tk.Label(self.newwindow, 
                                    image=self.analysis_result[0]).pack()
 
-        
+

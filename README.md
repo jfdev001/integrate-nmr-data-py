@@ -10,6 +10,7 @@ Basic Script to perform trapezoidal sum on NMR peak list data (*.asc)
    example class EntryLabelFrame(MainApp)
    example class AnalysisLabelFrame(MainApp)
 -- rewrite NmrAnalyzer arguments? It has a lot of positional arguments
+-- could inheritance be used with this? When to use inheritance?
 
 ## Documentation:
    **Tkinter:**
