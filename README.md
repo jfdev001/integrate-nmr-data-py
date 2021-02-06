@@ -9,6 +9,7 @@ WHAT'S NEXT:
 -- reorganize each "section" into it's own class.
    example class EntryLabelFrame(MainApp)
    example class AnalysisLabelFrame(MainApp)
+-- rewrite NmrAnalyzer arguments? It has a lot of positional arguments
 
 Documentation:
    Tkinter:

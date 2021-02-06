@@ -7,7 +7,7 @@ import io
 import numpy as np
 import matplotlib.pyplot as plt
 
-class NmrAnalyzer:
+class NmrAnalyzer:  # Make inherit from MainApp?
     """Encapsulates all NMR related integration data and methods."""
     def __init__(self, lower_lim, upper_lim, file_path, file_name):
         """Analysis attributes """ 

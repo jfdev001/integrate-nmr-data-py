@@ -1,4 +1,4 @@
-"""Tkinter interface for integrate NMR script."""
+"""GUI for processing nmr data, plotting it, and writing it to disk."""
 
 import tkinter as tk 
 import tkinter.filedialog as fd
@@ -170,45 +170,55 @@ class MainApp:
 
         self.file_name_var.set(fname)
 
+        return None
+
         
     def do_analysis(self):
-        """Instantiate NmrAnalysis and return plots"""
+        """Instantiate NmrAnalysis and return plots."""
+        # Instantiate NmrAnalyzer
         analyzer = NmrAnalyzer(self.lower_limit_var, self.upper_limit_var,
                                self.file_path, self.file_name_var)
         self.analysis_result = analyzer.proc_data()
 
         # Create new window for matplotlib figure
-        self.__new_window(self.analysis_result)
+        self.__new_window()
+
+        return None
+
 
     def __new_window(self):
         """Create the window for the matplotlib figure.
 
         This is analagous to tk.Frame(self.master) where 
-        self.master = tk.Tk().Toplevel allows for the creation of a 
-        window instance under the tk.Tk() object versus creating a 
-        completely new tk.Tk() instance that would have a different 
-        mainloop.
+        self.master = tk.Tk(). Toplevel allows for the creation of a 
+        window instance under the existing tk.Tk() object versus 
+        creating a completely new tk.Tk() object.
         """
         self.__analysis_window = AnalysisWindow(tk.Toplevel(self.master), 
                                                 self.analysis_result)
 
         return None
 
-# class AnalysisWindow:
-#     """Displays the graph and should have a menu."""
-#     def __init__(self, window=None, analysis_result=None):
-#         """Initialize new analysis window and some configuration."""
-#         # Control window
-#         self.window = window
-#         self.frame = tk.Frame(self.window)
 
-#         # Tuple (figure photoimage, str log)
-#         self.analysis_result = analysis_result
+class AnalysisWindow:
+    """Displays the graph and should have a menu."""
+    def __init__(self, window=None, analysis_result=None):
+        """Initialize new analysis window and some configuration."""
+        # Control window
+        self.window = window
+        self.frame = tk.Frame(self.window)
 
-#         # Title
-#         self.window.title("Data Analysis Window")
+        # Title
+        self.window.title("Data Analysis Window")
 
-#         # Pack the window
-#         self.frame.pack()
+        # Pack the window
+        self.frame.pack()
+
+        # Tuple (figure ImageTk.PhotoImage, str log)
+        self.analysis_result = analysis_result
+
+        # Plot label
+        self.plot_label = tk.Label(self.window, 
+                                   image=self.analysis_result[0]).pack()
 
 
