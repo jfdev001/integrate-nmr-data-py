@@ -64,6 +64,7 @@ class NmrAnalyzer:  # Make inherit from MainApp?
         ax.set_xlabel("Chemical Shift")
         ax.set_ylabel("Signal Intensity")
         ax.set_title(f"Plot of {self.__file_name}")
+        ax.set_xlim(ax.get_xlim()[::-1])  # Reverse tuple and set range
 
         # Convert plot to PhotoImage object
         buffer = io.BytesIO()  # Reserve memory for figure
