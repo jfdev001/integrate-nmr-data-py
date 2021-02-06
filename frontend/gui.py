@@ -31,85 +31,6 @@ class MainApp:
         # Grid master frame
         self.frame.grid(sticky=tk.N + tk.S + tk.E + tk.W)
 
-        # -------Define Widgets--------
-        # Label frames
-        self.input_frame = tk.LabelFrame(self.master, 
-                                         text="Entry Frame",
-                                         padx=5,
-                                         pady=10)
-        self.analysis_labelframe = tk.LabelFrame(self.master, 
-                                            text="Analysis Frame",
-                                            padx=5,
-                                            pady=5)
-                    
-
-        # Entry Widget styles
-        self.entry_style = {"relief": tk.SUNKEN, "width": 49}
-
-        # Title
-        self.title_label = tk.Label(self.master, 
-                                    text="Outfile Title:",
-                                    relief=tk.RAISED,
-                                    bg="floral white")
-        self.title_var = tk.StringVar(self.master, 
-                                      value=".txt")
-        self.title_entry = tk.Entry(self.master, 
-                                    textvariable=self.title_var,
-                                    **self.entry_style)
-
-        # Upper limit of integration
-        self.upper_limit_label = tk.Label(self.master,
-                                          text="Upper Limit of Integration:",
-                                          relief=tk.RAISED,
-                                          bg="floral white")
-        self.upper_limit_var = tk.StringVar(self.master, value="")
-        self.upper_limit_entry = tk.Entry(self.master,
-                                          textvariable=self.upper_limit_var,
-                                          **self.entry_style)
-
-        # Lower limit of integration
-        self.lower_limit_label = tk.Label(self.master,
-                                    text="Lower Limit of Integration:",
-                                    relief=tk.RAISED,
-                                    bg="floral white")
-        self.lower_limit_var = tk.StringVar(self.master, value="")
-        self.lower_limit_entry = tk.Entry(self.master,
-                                          textvariable=self.lower_limit_var,
-                                          **self.entry_style)
-
-        # File dialog
-        self.home = str(Path.home())  # Path to home directory
-        self.file_types = (("asc files", "*.asc"),)
-        self.file_path = None
-        self.file_name_var = tk.StringVar(self.master, 
-                                          value="File Name Displays Here")
-        self.file_button = tk.Button(self.master, 
-                              text="Click to Choose .ASC File",
-                              command=self.opendialog,
-                              bg = "bisque")
-        self.file_label = tk.Label(self.master, 
-                                   textvariable=self.file_name_var,
-                                   width=40,
-                                   bd=4,
-                                   relief=tk.SUNKEN,
-                                   wraplength=280)
-
-        # Analyze button
-        self.analysis_button = tk.Button(self.master,
-                                         text="Click to Analyze Data",
-                                         command=self.do_analysis,
-                                         bg="bisque")
-                                         #width=24)
-
-        # Save button
-        self.save_button = tk.Button(self.master,
-                                     text="Click to Save Analysis",
-                                     command=None,
-                                     bg="bisque")
-                                     #width=24)
-
-        #-------End Define Widgets--------
-
         # Grid Widgets to screen
         self.padding = {"padx": 2, "pady": 2, "ipady": 2, "ipadx": 2}
         self.grid_widgets()
@@ -156,7 +77,112 @@ class MainApp:
                               ipady=5, ipadx=5, padx=5, pady=5,
                               in_=self.analysis_labelframe)
 
-    
+
+    def new_window(self):
+        """Create the window for the matplotlib figure.
+
+        This is analagous to tk.Frame(self.master) where 
+        self.master = tk.Tk(). Toplevel allows for the creation of a 
+        window instance under the existing tk.Tk() object versus 
+        creating a completely new tk.Tk() object.
+        """
+        self.analysis_window = AnalysisWindow(tk.Toplevel(self.master), 
+                                                self.analysis_result)
+
+        return None
+
+
+class EntryFrame:
+    """Encapsulates Widgets for 'Entry Frame' LabelFrame.
+
+    This class is bound to the MainApp window.
+    """
+    def __init__(self, mainappwindow=None):
+        """Define Widgets for this LabelFrame."""
+        # Master of MainApp is also master of this class
+        self.master = mainappwindow
+
+        # LabelFrame
+        self.entry_frame = tk.LabelFrame(self.master, 
+                                    text="Entry Frame",
+                                    padx=5,
+                                    pady=10)
+
+        # Entry Widget styles
+        self.entry_style = {"relief": tk.SUNKEN, "width": 49}
+
+        # Title
+        self.title_label = tk.Label(self.master, 
+                                    text="Outfile Title:",
+                                    relief=tk.RAISED,
+                                    bg="floral white")
+        self.title_var = tk.StringVar(self.master, 
+                                      value=".txt")
+        self.title_entry = tk.Entry(self.master, 
+                                    textvariable=self.title_var,
+                                    **self.entry_style)
+
+        # Upper limit of integration
+        self.upper_limit_label = tk.Label(self.master,
+                                          text="Upper Limit of Integration:",
+                                          relief=tk.RAISED,
+                                          bg="floral white")
+        self.upper_limit_var = tk.StringVar(self.master, value="")
+        self.upper_limit_entry = tk.Entry(self.master,
+                                          textvariable=self.upper_limit_var,
+                                          **self.entry_style)
+
+        # Lower limit of integration
+        self.lower_limit_label = tk.Label(self.master,
+                                    text="Lower Limit of Integration:",
+                                    relief=tk.RAISED,
+                                    bg="floral white")
+        self.lower_limit_var = tk.StringVar(self.master, value="")
+        self.lower_limit_entry = tk.Entry(self.master,
+                                          textvariable=self.lower_limit_var,
+                                          **self.entry_style)
+
+
+class AnalysisFrame:
+    """Encapsulates Widgets for 'Analysis Frame' LabelFrame.
+
+    This class is bound to the MainApp window.
+    """
+    def __init__(self, mainappwindow=None):
+        """Define widgets for this LabelFrame."""
+        # Master of MainApp is also master of this class
+        self.master = mainappwindow
+
+        # LabelFrame
+        self.analysis_labelframe = tk.LabelFrame(self.master, 
+                                            text="Analysis Frame",
+                                            padx=5,
+                                            pady=5) 
+        
+        # File dialog
+        self.home = str(Path.home())  # Path to home directory
+        self.file_types = (("asc files", "*.asc"),)
+        self.file_path = None
+        self.file_name_var = tk.StringVar(self.master, 
+                                          value="File Name Displays Here")
+        self.file_button = tk.Button(self.master, 
+                              text="Click to Choose .ASC File",
+                              command=self.opendialog,
+                              bg = "bisque")
+        self.file_label = tk.Label(self.master, 
+                                   textvariable=self.file_name_var,
+                                   width=40,
+                                   bd=4,
+                                   relief=tk.SUNKEN,
+                                   wraplength=280)
+
+        # Analyze button
+        self.analysis_button = tk.Button(self.master,
+                                         text="Click to Analyze Data",
+                                         command=self.do_analysis,
+                                         bg="bisque")
+
+
     def opendialog(self):
         """Popup for file dialog and set file path/name"""
         # Dialog
@@ -186,20 +212,6 @@ class MainApp:
         return None
 
 
-    def new_window(self):
-        """Create the window for the matplotlib figure.
-
-        This is analagous to tk.Frame(self.master) where 
-        self.master = tk.Tk(). Toplevel allows for the creation of a 
-        window instance under the existing tk.Tk() object versus 
-        creating a completely new tk.Tk() object.
-        """
-        self.analysis_window = AnalysisWindow(tk.Toplevel(self.master), 
-                                                self.analysis_result)
-
-        return None
-
-
 class AnalysisWindow:
     """Displays the graph and should have a menu."""
     def __init__(self, window=None, analysis_result=None):
@@ -221,4 +233,4 @@ class AnalysisWindow:
         self.plot_label = tk.Label(self.window, 
                                    image=self.analysis_result[0]).pack()
 
-
+        
