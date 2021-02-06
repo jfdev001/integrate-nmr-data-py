@@ -1,4 +1,5 @@
 """GUI for processing nmr data, plotting it, and writing it to disk.
+
 Each section of the main window (MainApp) is divided into two classes.
 The window which is instantiated as a result of data analysis is
 also a separate class.
