@@ -1,7 +1,7 @@
 # integrate-nmr-data-py
 Basic Script to perform trapezoidal sum on NMR peak list data (*.asc)
 
-WHAT'S NEXT:
+## WHAT'S NEXT:
 -- Add button for data analysis, to the right of openfile
    -- add error checking?
 -- Best practice for root=? of control variable?
@@ -11,9 +11,9 @@ WHAT'S NEXT:
    example class AnalysisLabelFrame(MainApp)
 -- rewrite NmrAnalyzer arguments? It has a lot of positional arguments
 
-Documentation:
-   Tkinter:
-   Canonical doc
+## Documentation:
+   **Tkinter:**
+   Canonical doc:
       http://tcl.tk/man/tcl8.5/TkCmd/options.htm#M-wraplength
 
    https://coderslegacy.com/python/python-gui/
@@ -27,19 +27,23 @@ Documentation:
 
    
 
-Questions:
-   Get temp matplotlib figure:
+## Questions:
+   ***Get temp matplotlib figure:***
    https://stackoverflow.com/questions/57316491/how-to-convert-matplotlib-figure-to-pil-image-object-without-saving-image
 
-   kwargs and class:
+   ***kwargs and class:***
    https://stackoverflow.com/questions/8187082/how-can-you-set-class-attributes-from-variable-arguments-kwargs-in-python
 
-   tkinter frames:
+   ***tkinter frames:***
    https://stackoverflow.com/questions/9759496/aligning-widgets-using-grid-between-multiple-tkinter-labelframes
-   git:
+
+
+  ***git:***
    https://stackoverflow.com/questions/5697750/what-exactly-does-the-u-do-git-push-u-origin-master-vs-git-push-origin-ma
 
-   gui:
+   https://stackoverflow.com/questions/52704/how-do-i-discard-unstaged-changes-in-git
+
+   ***gui:***
       Icon Image:
       Requires png or at the very least a file that has not had
       it's extension changed.
@@ -48,19 +52,20 @@ Questions:
       Dir Path:
       https://help.pythonanywhere.com/pages/NoSuchFileOrDirectory/
 
-   string slicing:
+   ***string slicing:***
       https://www.programiz.com/python-programming/methods/string/find
 
       https://www.educative.io/edpresso/how-do-you-reverse-a-string-in-python
 
 
-Plans:
+## Plans:
 1. https://matplotlib.org/3.1.3/tutorials/introductory/usage.html#sphx-glr-tutorials-introductory-usage-py    
 2. Figure out how this integral is displayed!!
    https://matplotlib.org/3.1.1/gallery/showcase/integral.html
 3. Improve file reading mechanism to stop when all needed data is integrated.
 
-Purpose: This program parses the chemical shift and real intensity values 
+## Purpose: 
+This program parses the chemical shift and real intensity values 
 of NMR data (.asc format) into two separate lists. 
 It then calculates the integral on the desired interval based on the 
 trapezoidal sum. 
