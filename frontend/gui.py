@@ -1,4 +1,4 @@
-"""Tkinter interface for integrate NMR script."""
+"""GUI for processing nmr data, plotting it, and writing it to disk."""
 
 import tkinter as tk 
 import tkinter.filedialog as fd
@@ -6,11 +6,10 @@ from PIL import ImageTk
 import os
 from pathlib import Path
 from calculations.nmranalyzer import NmrAnalyzer
-# from calculations.intclass import DoCalculus 
 
 
-class GUI:
-    """GUI for integration script"""
+class MainApp:
+    """GUI for integration script."""
     def __init__(self, master=None):
         """Initialize master Frame and define other Widgets."""
         # Master frame
@@ -38,7 +37,7 @@ class GUI:
                                          text="Entry Frame",
                                          padx=5,
                                          pady=10)
-        self.analysis_frame = tk.LabelFrame(self.master, 
+        self.analysis_labelframe = tk.LabelFrame(self.master, 
                                             text="Analysis Frame",
                                             padx=5,
                                             pady=5)
@@ -120,7 +119,7 @@ class GUI:
         """Control the geometry of the Widgets."""
         # LabelFrames
         self.input_frame.grid(row=0, column=0)
-        self.analysis_frame.grid(row=1, column=0, sticky=tk.W)
+        self.analysis_labelframe.grid(row=1, column=0, sticky=tk.W)
 
         # Title
         self.title_label.grid(row=0, column=0, sticky=tk.W+tk.E, 
@@ -143,19 +142,19 @@ class GUI:
         # File dialog button
         self.file_button.grid(row=3, column=0, sticky=tk.W,
                               ipady=5, ipadx=5, padx=5, pady=5, 
-                              in_=self.analysis_frame)
+                              in_=self.analysis_labelframe)
         self.file_label.grid(row=4, column=0, columnspan=3, sticky=tk.W+tk.E,
-                             **self.padding, in_=self.analysis_frame)
+                             **self.padding, in_=self.analysis_labelframe)
 
         # Data analysis button
         self.analysis_button.grid(row=3, column=1, sticky=tk.W,
                                   ipady=5, ipadx=5, padx=5, pady=5,
-                                  in_=self.analysis_frame)
+                                  in_=self.analysis_labelframe)
 
         # Save button
         self.save_button.grid(row=3, column=2, sticky=tk.W,
                               ipady=5, ipadx=5, padx=5, pady=5,
-                              in_=self.analysis_frame)
+                              in_=self.analysis_labelframe)
 
     
     def fdialog(self):
@@ -171,18 +170,55 @@ class GUI:
 
         self.file_name_var.set(fname)
 
+        return None
+
         
     def do_analysis(self):
-        """Instantiate NmrAnalysis and return plots"""
+        """Instantiate NmrAnalysis and return plots."""
+        # Instantiate NmrAnalyzer
         analyzer = NmrAnalyzer(self.lower_limit_var, self.upper_limit_var,
                                self.file_path, self.file_name_var)
         self.analysis_result = analyzer.proc_data()
 
-        # Create img label to test
-        self.img_label = tk.Label(self.master, 
-                                  image=self.analysis_result[0]).grid(row=2, column=0)
+        # Create new window for matplotlib figure
+        self.__new_window()
+
+        return None
 
 
-class AnalysisWindow(GUI):
-    def __init__(self):
-        return
+    def __new_window(self):
+        """Create the window for the matplotlib figure.
+
+        This is analagous to tk.Frame(self.master) where 
+        self.master = tk.Tk(). Toplevel allows for the creation of a 
+        window instance under the existing tk.Tk() object versus 
+        creating a completely new tk.Tk() object.
+        """
+        self.__analysis_window = AnalysisWindow(tk.Toplevel(self.master), 
+                                                self.analysis_result)
+
+        return None
+
+
+class AnalysisWindow:
+    """Displays the graph and should have a menu."""
+    def __init__(self, window=None, analysis_result=None):
+        """Initialize new analysis window and some configuration."""
+        # Control window
+        self.window = window
+        self.frame = tk.Frame(self.window)
+
+        # Title
+        self.window.title("Data Analysis Window")
+
+        # Pack the window
+        self.frame.pack()
+
+        # Tuple (figure ImageTk.PhotoImage, str log)
+        self.analysis_result = analysis_result
+
+        # Plot label
+        self.plot_label = tk.Label(self.window, 
+                                   image=self.analysis_result[0]).pack()
+
+
