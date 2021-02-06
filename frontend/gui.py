@@ -181,3 +181,8 @@ class GUI:
         # Create img label to test
         self.img_label = tk.Label(self.master, 
                                   image=self.analysis_result[0]).grid(row=2, column=0)
+
+
+class AnalysisWindow(GUI):
+    def __init__(self):
+        return
