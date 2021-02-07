@@ -294,9 +294,17 @@ class AnalysisWindow:
 class MenuSection:
     """Encapsulates Widgets and methods for a menu.
 
+    This class is bound to the AnalysisWindow window.
+
     The purpose of the menu is to prompt the user to save
     the matplotlib image and the outfile, the outfile alone, or the
     plot.
+
+    The save menu should have prompts for successful completion or
+    possibly include the default name with prepended OUTFILE
+    or PLOT_
+    Probably not neccessary since the file formats handle that, but
+    worth including?
     """
     def __init__(self, analysis_section_master=None, entry_section=None,
                  analysis_result=None):
@@ -351,6 +359,20 @@ class MenuSection:
         
         Opens save file dialog.
         """
+        # Name of directory to save file to
+        save_dir = fd.askdirectory(title="Select Directory",
+                                   initialdir=str(Path.home()))
+
+        # File name that is going to be saved
+        save_fname = fd.asksaveasfilename(title="Save Outfile",
+                                     initialdir=save_dir,
+                                     defaultextension=".csv",
+                                     filetypes=(("csv files", "*.csv"),))
+
+        # Save the file
+        with open(os.path.join(save_dir, save_fname), "w") as fobj:
+            fobj.write(self.analysis_result[1])
+
         return None
 
     
