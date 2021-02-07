@@ -252,19 +252,19 @@ class AnalysisWindow:
         """Initialize new analysis window and some configuration."""
         # Constructor
         self.new_window = new_window  # Control frame
-        self.analysis_result = analysis_result  # Tuple (figure ImageTk.PhotoImage, str log)
+        self.analysis_result = analysis_result  # (MyImage, str log)
         self.entry_section = entry_section  # Entry section for MenuSection
 
         # Title
         self.new_window.title("Data Analysis Window")
 
-        # Tuple (figure ImageTk.PhotoImage, str log)
+        # Tuple (MyImage, str log)
         self.analysis_result = analysis_result
 
         # Plot label
         self.plot_label = tk.Label(self.new_window,
-                                   image=self.analysis_result[0],
-                                   relief=tk.RAISED)
+                                image=self.analysis_result[0].get_photoimage(),
+                                relief=tk.RAISED)
 
         # Outfile
         self.outfile_area = self.analysis_result[1].split(",")[-1]
@@ -340,7 +340,8 @@ class MenuSection:
                                                 ("jpg files", "*.jpg")))
 
         # Save using PhotoImage file attr, which is file=Image.open()
-        self.analysis_result[0].file.save(os.path.join(save_dir, fname))
+        img = self.analysis_result[0].get_opened_img()
+        img.save(os.path.join(save_dir, save_fname))
 
         return None
 

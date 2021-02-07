@@ -69,7 +69,7 @@ class NmrAnalyzer:  # Make inherit from MainApp?
         # Convert plot to PhotoImage object
         buffer = io.BytesIO()  # Reserve memory for figure
         fig.savefig(buffer)    # Save figure in that memory
-        plot_img = ImageTk.PhotoImage(Image.open(buffer))  # Use w/ tk
+        plot_img = MyImage(Image.open(buffer))  # Use w/ tk
 
         # Return the PhotoImage object
         return plot_img
@@ -91,3 +91,20 @@ class NmrAnalyzer:  # Make inherit from MainApp?
         # Return outfile text
         return text
 
+
+class MyImage:
+    """Makes Image object used in PhotoImage init accessible."""
+    def __init__(self, image=None ):
+        """Construct PhotoImage and Image object."""
+        self.__opened_img = image
+        self.__photoimage = ImageTk.PhotoImage(self.__opened_img)
+
+    
+    def get_opened_img(self):
+        """Return opened image private attr."""
+        return self.__opened_img
+
+
+    def get_photoimage(self):
+        """Return PhotoImage private attr."""
+        return self.__photoimage
