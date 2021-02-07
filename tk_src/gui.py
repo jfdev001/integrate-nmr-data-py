@@ -118,7 +118,7 @@ class EntrySection:
 
         # Title
         self.title_label = tk.Label(self.master, 
-                                    text="Outfile Title:",
+                                    text="File Title:",
                                     relief=tk.RAISED,
                                     bg="floral white")
         self.title_var = tk.StringVar(self.master, 
@@ -339,8 +339,9 @@ class MenuSection:
                                                 ("svg files", "*.svg"),
                                                 ("jpg files", "*.jpg")))
 
-        # Save the matplotlib image as this 
-        # self.analysis_result[0].write(os.path.join(save_dir, fname))
+        # Save using PhotoImage file attr, which is file=Image.open()
+        self.analysis_result[0].file.save(os.path.join(save_dir, fname))
+
         return None
 
     
