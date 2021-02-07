@@ -19,6 +19,8 @@ class MainApp:
         """Initialize master Frame and instantiate other Widgets."""
         # Master frame
         self.master = master
+        self.master.geometry("475x245")  # Initial dimensions of widget
+        self.master.resizable(0, 0)  # No resize in x or y direction 
         self.frame = tk.Frame(self.master)
 
         # Tuple (figure photoimage, str log) returned from NmrAnalyzer
@@ -49,7 +51,7 @@ class MainApp:
         self.frame.grid(sticky=tk.N + tk.S + tk.E + tk.W)
 
         # LabelFrames
-        self.entry_section.frame.grid(row=0, column=0, sticky=tk.W)
+        self.entry_section.frame.grid(row=0, column=0)
         self.analysis_section.frame.grid(row=1, column=0)
 
         # Title
@@ -282,7 +284,6 @@ class AnalysisWindow:
 
     def grid_widgets(self):
         """Control geometry of Widgets for AnalysisWindow."""
-        self.new_window.grid(row=0,column=1)
         self.plot_label.grid(row=0, column=0)
         self.outfile_label.grid(row=1, column=0)
         
