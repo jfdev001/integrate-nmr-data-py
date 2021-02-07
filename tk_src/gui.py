@@ -33,9 +33,6 @@ class MainApp:
         # Set title
         self.master.title("NMR Inte-great!")
 
-        # Grid frame inside the tk.Tk() instance
-        self.frame.grid(sticky=tk.N + tk.S + tk.E + tk.W)
-
         # Instantiate Widgets associated with this window
         self.entry_section =  EntrySection(self.master)
         self.analysis_section = AnalysisSection(self.master, 
@@ -48,6 +45,9 @@ class MainApp:
 
     def grid_widgets(self):
         """Control the geometry of the Widgets for MainApp."""
+        # Grid frame inside the tk.Tk() instance
+        self.frame.grid(sticky=tk.N + tk.S + tk.E + tk.W)
+
         # LabelFrames
         self.entry_section.frame.grid(row=0, column=0, sticky=tk.W)
         self.analysis_section.frame.grid(row=1, column=0)
@@ -120,7 +120,7 @@ class EntrySection:
                                     relief=tk.RAISED,
                                     bg="floral white")
         self.title_var = tk.StringVar(self.master, 
-                                      value=".txt")
+                                      value=None)
         self.title_entry = tk.Entry(self.master, 
                                     textvariable=self.title_var,
                                     **self.style)
@@ -275,16 +275,18 @@ class AnalysisWindow:
         self.grid_widgets()
 
         # Menu
-        self.menu_section = MenuSection(self.new_window, self.entry_section)
+        self.menu_section = MenuSection(self.new_window, self.entry_section,
+                                        self.analysis_result)
         self.new_window.config(menu=self.menu_section.main_menu)
 
 
     def grid_widgets(self):
         """Control geometry of Widgets for AnalysisWindow."""
-        # Grid the Plot Label
+        self.new_window.grid(row=0,column=1)
         self.plot_label.grid(row=0, column=0)
         self.outfile_label.grid(row=1, column=0)
         
+
         return None
 
 
@@ -295,11 +297,13 @@ class MenuSection:
     the matplotlib image and the outfile, the outfile alone, or the
     plot.
     """
-    def __init__(self, analysis_section_master=None, entry_section=None):
+    def __init__(self, analysis_section_master=None, entry_section=None,
+                 analysis_result=None):
         """Create the cascading menu"""
         # Constructor
         self.master = analysis_section_master
         self.entry_section = entry_section  # For naming plot and outfiles 
+        self.analysis_result = analysis_result
 
         # Main menu
         self.main_menu = tk.Menu(self.master)
@@ -307,27 +311,50 @@ class MenuSection:
         # Make cascading menu -- requires existing main menu
         self.save_options_menu = tk.Menu(self.main_menu, tearoff=0)
         self.save_options_menu.add_command(label="Save Plot",
-                                           command=None)
+                                           command=self.save_plot)
         self.save_options_menu.add_command(label="Save Outfile",
-                                           command=None)
+                                           command=self.save_outfile)
         self.save_options_menu.add_command(label="Save Both",
-                                           command=None)
+                                           command=self.save_both)
         self.save_options_menu.add_separator()
         self.main_menu.add_cascade(label="Save Options", 
                                    menu=self.save_options_menu)
 
         
     def save_plot(self):
-        """Save the the matplotlib photoimage only."""
+        """Save the the matplotlib photoimage only.
+        
+        Opens save file dialog.
+        """
+        # Returns directory name into which plot will be saved
+        save_dir = fd.askdirectory(title="Select Directory",
+                                     initialdir=str(Path.home()))
+
+        # Ask name to save the file as 
+        save_fname = fd.asksaveasfilename(title="Save Plot",
+                                     initialdir=save_dir,
+                                     defaultextension=".png",
+                                     filetypes=(("png files", "*.png"),
+                                                ("svg files", "*.svg"),
+                                                ("jpg files", "*.jpg")))
+
+        # Save the matplotlib image as this 
+        # self.analysis_result[0].write(os.path.join(save_dir, fname))
         return None
 
     
     def save_outfile(self):
-        """Save the outfile only."""
+        """Save the outfile only.
+        
+        Opens save file dialog.
+        """
         return None
 
     
     def save_both(self):
-        """Save both the outfile and the matplotlib photoimage."""
+        """Save both the outfile and the matplotlib photoimage.
+        
+        Pack into folder and then save.
+        """
         return None
 
