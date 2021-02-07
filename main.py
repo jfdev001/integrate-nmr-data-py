@@ -1,6 +1,6 @@
 """Driver file."""
 
-from frontend.gui import MainApp
+from tk_src.gui import MainApp
 import tkinter as tk
 
 def main():

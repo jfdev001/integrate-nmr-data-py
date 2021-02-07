@@ -10,7 +10,7 @@ import tkinter.filedialog as fd
 from PIL import ImageTk
 import os
 from pathlib import Path
-from calculations.nmranalyzer import NmrAnalyzer
+from calculation_src.nmranalyzer import NmrAnalyzer
 
 
 class MainApp:
