@@ -100,10 +100,10 @@ class EntrySection:
 
     This class is bound to the MainApp window.
     """
-    def __init__(self, mainappmaster=None):
+    def __init__(self, main_app_master=None):
         """Define Widgets for this LabelFrame."""
         # Master of MainApp is also master of this class
-        self.master = mainappmaster
+        self.master = main_app_master
 
         # LabelFrame
         self.frame = tk.LabelFrame(self.master, 
@@ -160,8 +160,9 @@ class AnalysisSection:
         self.analysis_result = None
 
         # Limits
-        self.lower_lim = entry_section.lower_lim_var
-        self.upper_lim = entry_section.upper_lim_var
+        self.entry_section = entry_section
+        self.lower_lim = self.entry_section.lower_lim_var
+        self.upper_lim = self.entry_section.upper_lim_var
 
         # LabelFrame
         self.frame = tk.LabelFrame(self.master, text="Analysis Frame", 
@@ -231,7 +232,8 @@ class AnalysisSection:
         creating a completely new tk.Tk() object.
         """
         self.analysis_window = AnalysisWindow(tk.Toplevel(self.master), 
-                                              self.analysis_result)
+                                              self.analysis_result,
+                                              self.entry_section)
 
         return None
 
@@ -243,10 +245,13 @@ class AnalysisWindow:
     There is no need to create a frame for rendering the window itself
     since the tk.Toplevel Widget behaves like a frame.
     """
-    def __init__(self, new_window=None, analysis_result=None):
+    def __init__(self, new_window=None, analysis_result=None, 
+                 entry_section=None):
         """Initialize new analysis window and some configuration."""
-        # Control window
-        self.new_window = new_window
+        # Constructor
+        self.new_window = new_window  # Control frame
+        self.analysis_result = analysis_result  # Tuple (figure ImageTk.PhotoImage, str log)
+        self.entry_section = entry_section  # Entry section for MenuSection
 
         # Title
         self.new_window.title("Data Analysis Window")
@@ -255,20 +260,59 @@ class AnalysisWindow:
         self.analysis_result = analysis_result
 
         # Plot label
-        self.plot_label = tk.Label(self.new_window, 
-                                   image=self.analysis_result[0])
+        self.plot_label = tk.Label(self.new_window,
+                                   image=self.analysis_result[0],
+                                   relief=tk.RAISED)
+
+        # Outfile
+        self.outfile_area = self.analysis_result[1].split(",")[-1]
+        self.outfile_label = tk.Label(self.new_window, 
+                                      text=f"Area: {self.outfile_area}",
+                                      relief=tk.SUNKEN)
+        self.outfile_label.config(font=("Arial", 16))
 
         # Grid Widgets
         self.grid_widgets()
 
         # Menu
-        self.menu_section = MenuSection(self.new_window)
+        self.menu_section = MenuSection(self.new_window, self.entry_section)
+        self.new_window.config(menu=self.menu_section.main_menu)
 
 
     def grid_widgets(self):
         """Control geometry of Widgets for AnalysisWindow."""
         # Grid the Plot Label
-        self.plot_label.grid()
+        self.plot_label.grid(row=0, column=0)
+        self.outfile_label.grid(row=1, column=0)
         
         return None
+
+
+class MenuSection:
+    """Encapsulates Widgets and methods for a menu.
+
+    The purpose of the menu is to prompt the user to save
+    the matplotlib image and the outfile, the outfile alone, or the
+    plot.
+    """
+    def __init__(self, analysis_section_master=None, entry_section=None):
+        """Create the cascading menu"""
+        # Constructor
+        self.master = analysis_section_master
+        self.entry_section = entry_section  # For naming plot and outfiles 
+
+        # Main menu
+        self.main_menu = tk.Menu(self.master)
+
+        # Make cascading menu -- requires existing main menu
+        self.save_options_menu = tk.Menu(self.main_menu, tearoff=0)
+        self.save_options_menu.add_command(label="Save Plot",
+                                           command=None)
+        self.save_options_menu.add_command(label="Save Outfile",
+                                           command=None)
+        self.save_options_menu.add_command(label="Save Both",
+                                           command=None)
+        self.save_options_menu.add_separator()
+        self.main_menu.add_cascade(label="Save Options", 
+                                   menu=self.save_options_menu)
 
