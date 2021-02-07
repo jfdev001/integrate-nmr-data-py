@@ -316,3 +316,18 @@ class MenuSection:
         self.main_menu.add_cascade(label="Save Options", 
                                    menu=self.save_options_menu)
 
+        
+    def save_plot(self):
+        """Save the the matplotlib photoimage only."""
+        return None
+
+    
+    def save_outfile(self):
+        """Save the outfile only."""
+        return None
+
+    
+    def save_both(self):
+        """Save both the outfile and the matplotlib photoimage."""
+        return None
+
