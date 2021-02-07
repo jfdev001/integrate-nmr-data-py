@@ -33,14 +33,13 @@ class MainApp:
         # Set title
         self.master.title("NMR Inte-great!")
 
-        # Grid master frame
+        # Grid frame inside the tk.Tk() instance
         self.frame.grid(sticky=tk.N + tk.S + tk.E + tk.W)
 
         # Instantiate Widgets associated with this window
         self.entry_section =  EntrySection(self.master)
         self.analysis_section = AnalysisSection(self.master, 
-                                              self.entry_section.lower_lim_var,
-                                              self.entry_section.upper_lim_var)
+                                              self.entry_section)
 
         # Grid Widgets to screen
         self.padding = {"padx": 2, "pady": 2, "ipady": 2, "ipadx": 2}
@@ -48,7 +47,7 @@ class MainApp:
 
 
     def grid_widgets(self):
-        """Control the geometry of the Widgets."""
+        """Control the geometry of the Widgets for MainApp."""
         # LabelFrames
         self.entry_section.frame.grid(row=0, column=0, sticky=tk.W)
         self.analysis_section.frame.grid(row=1, column=0)
@@ -94,11 +93,12 @@ class MainApp:
                                               ipady=5, ipadx=5, padx=5, pady=5,
                                               in_=self.analysis_section.frame)
 
+        return None
 
 class EntrySection:
     """Encapsulates Widgets for 'Entry Frame' LabelFrame.
 
-    This class is bound to the MainApp master.
+    This class is bound to the MainApp window.
     """
     def __init__(self, mainappmaster=None):
         """Define Widgets for this LabelFrame."""
@@ -149,16 +149,19 @@ class EntrySection:
 class AnalysisSection:
     """Encapsulates Widgets for 'Analysis Frame' LabelFrame.
 
-    This class is bound to the MainApp master.
+    This class is bound to the MainApp window.
     """
-    def __init__(self, mainappmaster=None, lower_lim=None, upper_lim=None):
+    def __init__(self, main_app_master=None, entry_section=None):
         """Define widgets for this LabelFrame."""
         # Master of MainApp is also master of this class
-        self.master = mainappmaster
+        self.master = main_app_master
+
+        # Tuple (figure PhotoImage, str outfile) result                       
+        self.analysis_result = None
 
         # Limits
-        self.lower_lim = lower_lim
-        self.upper_lim = upper_lim
+        self.lower_lim = entry_section.lower_lim_var
+        self.upper_lim = entry_section.upper_lim_var
 
         # LabelFrame
         self.frame = tk.LabelFrame(self.master, text="Analysis Frame", 
@@ -228,32 +231,44 @@ class AnalysisSection:
         creating a completely new tk.Tk() object.
         """
         self.analysis_window = AnalysisWindow(tk.Toplevel(self.master), 
-                                                self.analysis_result)
+                                              self.analysis_result)
 
         return None
 
 
 class AnalysisWindow:
     """Displays the graph and should have a menu.
+
     This is a window initialized using the tk.Toplevel Widget.
+    There is no need to create a frame for rendering the window itself
+    since the tk.Toplevel Widget behaves like a frame.
     """
-    def __init__(self, newwindow=None, analysis_result=None):
+    def __init__(self, new_window=None, analysis_result=None):
         """Initialize new analysis window and some configuration."""
         # Control window
-        self.newwindow = newwindow
-        self.frame = tk.Frame(self.newwindow)
+        self.new_window = new_window
 
         # Title
-        self.newwindow.title("Data Analysis Window")
-
-        # Pack the window
-        self.frame.pack()
+        self.new_window.title("Data Analysis Window")
 
         # Tuple (figure ImageTk.PhotoImage, str log)
         self.analysis_result = analysis_result
 
         # Plot label
-        self.plot_label = tk.Label(self.newwindow, 
-                                   image=self.analysis_result[0]).pack()
+        self.plot_label = tk.Label(self.new_window, 
+                                   image=self.analysis_result[0])
 
+        # Grid Widgets
+        self.grid_widgets()
+
+        # Menu
+        self.menu_section = MenuSection(self.new_window)
+
+
+    def grid_widgets(self):
+        """Control geometry of Widgets for AnalysisWindow."""
+        # Grid the Plot Label
+        self.plot_label.grid()
+        
+        return None
 
