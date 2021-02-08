@@ -22,6 +22,9 @@ Basic Script to perform trapezoidal sum on NMR peak list data (*.asc)
    
 
 ## Questions:
+   ***On class structure***
+   https://stackoverflow.com/questions/19993795/how-would-i-access-variables-from-one-class-to-another
+
    ***Get temp matplotlib figure:***
    https://stackoverflow.com/questions/57316491/how-to-convert-matplotlib-figure-to-pil-image-object-without-saving-image
 
