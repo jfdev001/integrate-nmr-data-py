@@ -2,15 +2,8 @@
 Basic Script to perform trapezoidal sum on NMR peak list data (*.asc)
 
 ## WHAT'S NEXT:
--- Add button for data analysis, to the right of openfile
-   -- add error checking?
--- Best practice for root=? of control variable?
--- modify calculations/ to class and perhaps do example of matplotlib
--- reorganize each "section" into it's own class.
-   example class EntryLabelFrame(MainApp)
-   example class AnalysisLabelFrame(MainApp)
--- rewrite NmrAnalyzer arguments? It has a lot of positional arguments
--- could inheritance be used with this? When to use inheritance?
+-- Rename master to window instead for clarity.
+-- Reorganize classes for inheritance purposes
 
 ## Documentation:
    **Tkinter:**
