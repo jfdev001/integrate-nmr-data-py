@@ -19,7 +19,7 @@ class MainApp:
         """Initialize master Frame and instantiate other Widgets."""
         # Master frame
         self.master = master
-        self.master.geometry("475x245")  # Initial dimensions of widget
+        self.master.geometry("475x215")  # Initial dimensions of widget
         self.master.resizable(0, 0)  # No resize in x or y direction 
         self.frame = tk.Frame(self.master)
 
@@ -54,30 +54,22 @@ class MainApp:
         self.entry_section.frame.grid(row=0, column=0)
         self.analysis_section.frame.grid(row=1, column=0)
 
-        # Title
-        self.entry_section.title_label.grid(row=0, column=0, sticky=tk.W+tk.E, 
-                                            **self.padding, 
-                                            in_=self.entry_section.frame)
-        self.entry_section.title_entry.grid(row=0, column=1, **self.padding, 
-                                            columnspan=2, 
-                                            in_=self.entry_section.frame)
-
         # Upper limit of integration
-        self.entry_section.upper_lim_label.grid(row=1, column=0, 
+        self.entry_section.upper_lim_label.grid(row=0, column=0, 
                                                 **self.padding,  
                                                 sticky=tk.W+tk.E, 
                                                 in_=self.entry_section.frame)
-        self.entry_section.upper_lim_entry.grid(row=1, column=1, 
+        self.entry_section.upper_lim_entry.grid(row=0, column=1, 
                                                 **self.padding, 
                                                 columnspan=2, 
                                                 in_=self.entry_section.frame)
 
         # Lower limit of integration
-        self.entry_section.lower_lim_label.grid(row=2, column=0, 
+        self.entry_section.lower_lim_label.grid(row=1, column=0, 
                                                 **self.padding, 
                                                 sticky=tk.W+tk.E, 
                                                 in_=self.entry_section.frame )
-        self.entry_section.lower_lim_entry.grid(row=2, column=1, 
+        self.entry_section.lower_lim_entry.grid(row=1, column=1, 
                                                 **self.padding,
                                                 columnspan=2,
                                                  in_=self.entry_section.frame)
@@ -115,17 +107,6 @@ class EntrySection:
 
         # Entry Widget styles
         self.style = {"relief": tk.SUNKEN, "width": 49}
-
-        # Title
-        self.title_label = tk.Label(self.master, 
-                                    text="File Title:",
-                                    relief=tk.RAISED,
-                                    bg="floral white")
-        self.title_var = tk.StringVar(self.master, 
-                                      value=None)
-        self.title_entry = tk.Entry(self.master, 
-                                    textvariable=self.title_var,
-                                    **self.style)
 
         # Upper limit of integration
         self.upper_lim_label = tk.Label(self.master,
@@ -379,11 +360,11 @@ class MenuSection:
     def save_both(self):
         """Save both the outfile and the matplotlib photoimage.
         
-        Pack into folder and then save.
+        Call both functions.
         """
         # Call Both other save functions
         self.save_plot()
         self.save_outfile()
-        
+
         return None
 
