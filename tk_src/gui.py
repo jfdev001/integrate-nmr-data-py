@@ -13,7 +13,7 @@ from pathlib import Path
 from calculation_src.nmranalyzer import NmrAnalyzer
 
 
-class MainApp:
+class MainWindow:
     """GUI for integration script."""
     def __init__(self, master=None):
         """Initialize master Frame and instantiate other Widgets."""
@@ -279,48 +279,10 @@ class MenuSection:
     The purpose of the menu is to prompt the user to save
     the matplotlib image and the outfile, the outfile alone, or the
     plot.
-
-    The save menu should have prompts for successful completion or
-    possibly include the default name with prepended OUTFILE
-    or PLOT_
-    Probably not neccessary since the file formats handle that, but
-    worth including?
     """
     def __init__(self, window=None, entry_section=None,
                  analysis_result=None):
-        """Create the cascading menu
-        Works when no self is present. Trying self
-        """
-        # # Menu -- try adding intermediary here self.window = window?'
-        # self.window = window
-        # self.menuBar = tk.Menu(self.window)
-  
-        # # Create a pull-down menu for file operations
-        # self.fileMenu = tk.Menu(self.menuBar, tearoff = False)
-        # self.fileMenu.add_command(label = "New")
-        # self.fileMenu.add_command(label = "Open...")
-        # self.fileMenu.add_command(label = "Close")
-        # self.fileMenu.add_command(label = "Exit")
-        # self.menuBar.add_cascade(menu = self.fileMenu, label = "File")
-          
-        # # Create a pull-down menu for editing operations
-        # self.editMenu = tk.Menu(self.menuBar, tearoff = False)
-        # self.editMenu.add_command(label = "Cut")
-        # self.editMenu.add_command(label = "Copy")
-        # self.editMenu.add_command(label = "Paste")
-        # self.editMenu.add_command(label = "Select All")
-        # self.editMenu.add_command(label = "Undo")
-        # self.editMenu.add_command(label = "Redo")
-        # self.menuBar.add_cascade(menu = self.editMenu, label = "Edit")
-  
-        # # Create a pull-down menu for help operations
-        # self.helpMenu = tk.Menu(self.menuBar, tearoff = False)
-        # self.helpMenu.add_command(label = "About")
-        # self.menuBar.add_cascade(menu = self.helpMenu, label = "Help")
-
-        # # Configure parent window
-        # self.window.config(menu=self.menuBar)
-
+        """Create the menubar and subsequent pulldowns (cascading)."""
         # Constructor
         self.window = window
         self.entry_section = entry_section  # For naming plot and outfiles 
@@ -343,9 +305,9 @@ class MenuSection:
         self.plot_options_menu.add_command(label="New Title", 
                                            command=self.new_title)
         self.plot_options_menu.add_command(label="New X-Label",
-                                           command=lambda x: self.new_ax("x"))
+                                           command=lambda : self.new_ax("x"))
         self.plot_options_menu.add_command(label="New Y-Label",
-                                           command=lambda x: self.new_ax("y"))
+                                           command=lambda : self.new_ax("y"))
 
         # Add the cascading menus to the main_menu
         self.main_menu.add_cascade(label="Save Options", 
