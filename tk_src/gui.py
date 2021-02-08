@@ -381,5 +381,9 @@ class MenuSection:
         
         Pack into folder and then save.
         """
+        # Call Both other save functions
+        self.save_plot()
+        self.save_outfile()
+        
         return None
 
