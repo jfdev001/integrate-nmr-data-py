@@ -9,12 +9,17 @@ import matplotlib.pyplot as plt
 
 class NmrAnalyzer:  # Make inherit from MainApp?
     """Encapsulates all NMR related integration data and methods."""
-    def __init__(self, lower_lim, upper_lim, file_path, file_name):
+    def __init__(self, lower_lim, upper_lim, file_path, file_name, **kwargs):
         """Analysis attributes """ 
+        # Constructor
         self.__lower_limit = float(lower_lim.get())  # tkinter var
         self.__upper_lim = float(upper_lim.get())  # tkinter var
         self.__file_path = file_path
         self.__file_name = file_name.get()  # tkinter var
+        self.kw = kwargs
+
+
+        # Results
         self.__x_arr = []  # Chemical shift ppm
         self.__y_arr = []  # Peak intensity
         self.__area = None

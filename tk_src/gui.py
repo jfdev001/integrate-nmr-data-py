@@ -260,7 +260,6 @@ class AnalysisWindow:
         # Menu
         self.menu_section = MenuSection(self.new_window, self.entry_section,
                                         self.analysis_result)
-        self.new_window.config(menu=self.menu_section.main_menu)
 
 
     def grid_widgets(self):
@@ -287,18 +286,50 @@ class MenuSection:
     Probably not neccessary since the file formats handle that, but
     worth including?
     """
-    def __init__(self, analysis_section_master=None, entry_section=None,
+    def __init__(self, window=None, entry_section=None,
                  analysis_result=None):
-        """Create the cascading menu"""
+        """Create the cascading menu
+        Works when no self is present. Trying self
+        """
+        # # Menu -- try adding intermediary here self.window = window?'
+        # self.window = window
+        # self.menuBar = tk.Menu(self.window)
+  
+        # # Create a pull-down menu for file operations
+        # self.fileMenu = tk.Menu(self.menuBar, tearoff = False)
+        # self.fileMenu.add_command(label = "New")
+        # self.fileMenu.add_command(label = "Open...")
+        # self.fileMenu.add_command(label = "Close")
+        # self.fileMenu.add_command(label = "Exit")
+        # self.menuBar.add_cascade(menu = self.fileMenu, label = "File")
+          
+        # # Create a pull-down menu for editing operations
+        # self.editMenu = tk.Menu(self.menuBar, tearoff = False)
+        # self.editMenu.add_command(label = "Cut")
+        # self.editMenu.add_command(label = "Copy")
+        # self.editMenu.add_command(label = "Paste")
+        # self.editMenu.add_command(label = "Select All")
+        # self.editMenu.add_command(label = "Undo")
+        # self.editMenu.add_command(label = "Redo")
+        # self.menuBar.add_cascade(menu = self.editMenu, label = "Edit")
+  
+        # # Create a pull-down menu for help operations
+        # self.helpMenu = tk.Menu(self.menuBar, tearoff = False)
+        # self.helpMenu.add_command(label = "About")
+        # self.menuBar.add_cascade(menu = self.helpMenu, label = "Help")
+
+        # # Configure parent window
+        # self.window.config(menu=self.menuBar)
+
         # Constructor
-        self.master = analysis_section_master
+        self.window = window
         self.entry_section = entry_section  # For naming plot and outfiles 
         self.analysis_result = analysis_result
 
         # Main menu
-        self.main_menu = tk.Menu(self.master)
+        self.main_menu = tk.Menu(self.window)
 
-        # Make cascading menu -- requires existing main menu
+        # Define cascading menu for save_options
         self.save_options_menu = tk.Menu(self.main_menu, tearoff=0)
         self.save_options_menu.add_command(label="Save Plot",
                                            command=self.save_plot)
@@ -306,11 +337,25 @@ class MenuSection:
                                            command=self.save_outfile)
         self.save_options_menu.add_command(label="Save Both",
                                            command=self.save_both)
-        self.save_options_menu.add_separator()
+
+        # Define cascading menu for plot_options
+        self.plot_options_menu = tk.Menu(self.main_menu, tearoff=0)
+        self.plot_options_menu.add_command(label="New Title", 
+                                           command=self.new_title)
+        self.plot_options_menu.add_command(label="New X-Label",
+                                           command=lambda x: self.new_ax("x"))
+        self.plot_options_menu.add_command(label="New Y-Label",
+                                           command=lambda x: self.new_ax("y"))
+
+        # Add the cascading menus to the main_menu
         self.main_menu.add_cascade(label="Save Options", 
                                    menu=self.save_options_menu)
-
+        self.main_menu.add_cascade(label="Plot Options",
+                                   menu=self.plot_options_menu)
         
+        # Configure window
+        self.window.config(menu=self.main_menu)
+
     def save_plot(self):
         """Save the the matplotlib photoimage only.
         
@@ -366,5 +411,19 @@ class MenuSection:
         self.save_plot()
         self.save_outfile()
 
+        return None
+
+    
+    def new_title(self):
+        """New title for matplotlib plot."""
+        return None
+
+    
+    def new_ax(self, ax=None):
+        """New axis label for matplotlib plot."""
+        if (ax == "x"):
+            pass
+        else:
+            pass
         return None
 
