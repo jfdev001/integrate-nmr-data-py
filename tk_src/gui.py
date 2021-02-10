@@ -102,7 +102,7 @@ class EntrySection:
     """
     def __init__(self, window=None):
         """Define Widgets for this LabelFrame."""
-        # window of MainApp is also window of this class
+        # Constructor: Window of MainWindow is also window of this class
         self.window = window
 
         # LabelFrame
@@ -140,18 +140,13 @@ class AnalysisSection:
 
     This class is bound to the MainApp window.
     """
-    def __init__(self, window=None, entry_section=None):
+    def __init__(self, window=None, info_entry_section=None, 
+                 info_analysis_results=None):
         """Define widgets for this LabelFrame."""
-        # window of MainApp is also window of this class
-        self.window = window
-
-        # Tuple (figure PhotoImage, str outfile) result                       
-        self.analysis_result = None
-
-        # Limits
-        self.entry_section = entry_section
-        self.lower_lim = self.entry_section.lower_lim_var
-        self.upper_lim = self.entry_section.upper_lim_var
+        # Constructor
+        self.window = window              # Same as MainWindow window
+        self.ies = info_entry_section     # Shared info entry section
+        self.iar = info_analysis_results  # Tuple (MyImage, str outfile)
 
         # LabelFrame
         self.frame = tk.LabelFrame(self.window, text="Analysis Frame", 
@@ -185,13 +180,14 @@ class AnalysisSection:
         """Popup for file dialog and set file path/name"""
         # Dialog
         self.file_path = fd.askopenfilename(title="Select ASC file",
-                                                  initialdir=self.home,
-                                                  filetypes=self.file_types)
+                                            initialdir=self.home,
+                                            filetypes=self.file_types)
 
-        # Set the file name
+        # Get the file name -- iterate backwards until /, then reverse
         fname = "".join(reversed(self.file_path[
                                     -1:self.file_path.rfind("/"):-1]))
-
+        
+        # Set the tkinter var storing the file name
         self.file_name_var.set(fname)
 
         return None
@@ -203,8 +199,8 @@ class AnalysisSection:
         analyzer = NmrAnalyzer(self.lower_lim, self.upper_lim,
                                self.file_path, self.file_name_var)
 
-        # Tuple (figure PhotoImage, str outfile) result                       
-        self.analysis_result = analyzer.proc_data()
+        # Set Tuple (figure PhotoImage, str outfile) result                       
+        self.iar = analyzer.proc_data()
 
         # Create new window for matplotlib figure
         self.new_window()
