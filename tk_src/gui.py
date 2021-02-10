@@ -37,7 +37,7 @@ class MainWindow:
         self.window.resizable(0, 0)  # No resize in x or y direction
 
         # Frame 
-        self.frame = tk.Frame(self.window).grid(sticky=tk.N+tk.S+tk.E+tk.W)
+        self.frame = tk.Frame(self.window).grid()
 
         # Set icon
         self.this_folder = os.path.dirname(os.path.abspath(__file__))
@@ -55,42 +55,43 @@ class MainWindow:
 
     def grid_widgets(self):
         """Control the geometry of the Widgets for MainApp."""
-        # LabelFrames
-        self.entry_section.frame.grid(row=0, column=0)
-        self.analysis_section.frame.grid(row=1, column=0)
+        # Shorthand variables for each section
+        self.ies = self.info.entry_section
+        self.ias = self.info.analysis_section
 
+        # LabelFrames
+        self.ies.frame.grid(row=0, column=0)
+        self.ias.frame.grid(row=1, column=0)
+
+        #----Entry Section----
         # Upper limit of integration
-        self.entry_section.upper_lim_label.grid(row=0, column=0, 
-                                                **self.padding,  
-                                                sticky=tk.W+tk.E, 
-                                                in_=self.entry_section.frame)
-        self.entry_section.upper_lim_entry.grid(row=0, column=1, 
-                                                **self.padding, 
-                                                columnspan=2, 
-                                                in_=self.entry_section.frame)
+        self.ies.upper_lim_label.grid(row=0, column=0, **self.padding,  
+                                      sticky=tk.W+tk.E, in_=self.ies.frame)
+        self.ies.upper_lim_entry.grid(row=0, column=1, columnspan=2,
+                                      **self.padding, in_=self.ies.frame)                             
 
         # Lower limit of integration
-        self.entry_section.lower_lim_label.grid(row=1, column=0, 
-                                                **self.padding, 
-                                                sticky=tk.W+tk.E, 
-                                                in_=self.entry_section.frame )
-        self.entry_section.lower_lim_entry.grid(row=1, column=1, 
-                                                **self.padding,
-                                                columnspan=2,
-                                                 in_=self.entry_section.frame)
+        self.ies.lower_lim_label.grid(row=1, column=0, **self.padding, 
+                                      sticky=tk.W+tk.E, in_=self.ies.frame) 
+                                               
+        self.ies.lower_lim_entry.grid(row=1, column=1, columnspan=2,
+                                      **self.padding, in_=self.ies.frame)
+        #----End Entry Section----
 
+        #----Analysis Section----
         # File dialog button
-        self.analysis_section.file_button.grid(row=3, column=0, sticky=tk.W,
-                                               ipady=5, ipadx=5, padx=5, pady=5, 
-                                               in_=self.analysis_section.frame)
-        self.analysis_section.file_label.grid(row=4, column=0, columnspan=2, 
-                                              sticky=tk.W+tk.E, **self.padding, 
-                                              in_=self.analysis_section.frame)
+        self.ias.file_button.grid(row=3, column=0, sticky=tk.W,
+                                  ipady=5, ipadx=5, padx=5, pady=5, 
+                                  in_=self.ias.frame)
+        self.ias.file_label.grid(row=4, column=0, columnspan=2, 
+                                 sticky=tk.W+tk.E, **self.padding, 
+                                 in_=self.ias.frame)
 
         # Data analysis button
-        self.analysis_section.analysis_button.grid(row=3, column=1, sticky=tk.W,
-                                              ipady=5, ipadx=5, padx=5, pady=5,
-                                              in_=self.analysis_section.frame)
+        self.ias.analysis_button.grid(row=3, column=1, sticky=tk.W,
+                                      ipady=5, ipadx=5, padx=5, pady=5,
+                                      in_=self.ias.frame)
+        #----End Analysis Section----
 
         return None
 
@@ -99,10 +100,10 @@ class EntrySection:
 
     This class is bound to the MainApp window.
     """
-    def __init__(self, main_app_window=None):
+    def __init__(self, window=None):
         """Define Widgets for this LabelFrame."""
         # window of MainApp is also window of this class
-        self.window = main_app_window
+        self.window = window
 
         # LabelFrame
         self.frame = tk.LabelFrame(self.window, 
@@ -139,10 +140,10 @@ class AnalysisSection:
 
     This class is bound to the MainApp window.
     """
-    def __init__(self, main_app_window=None, entry_section=None):
+    def __init__(self, window=None, entry_section=None):
         """Define widgets for this LabelFrame."""
         # window of MainApp is also window of this class
-        self.window = main_app_window
+        self.window = window
 
         # Tuple (figure PhotoImage, str outfile) result                       
         self.analysis_result = None
