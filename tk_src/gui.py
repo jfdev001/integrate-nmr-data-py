@@ -12,6 +12,18 @@ from pathlib import Path
 from calculation_src.nmranalyzer import NmrAnalyzer
 
 
+class SharedInfo:
+    """Stores section and analysis information in one location."""
+    def __init__(self, window):
+        """Construct sections and initialize analysis_result."""
+        # Construct MainWindow sections
+        self.entry_section = EntrySection(window)
+        self.analysis_section = AnalysisSection(window, self.entry_section)
+
+        # Store analysis result for use in AnalysisWindow later
+        self.analysis_result = None  # Tuple (MyImage, str outfile)
+
+
 class MainWindow:
     """GUI for integration script."""
     def __init__(self, master=None):
