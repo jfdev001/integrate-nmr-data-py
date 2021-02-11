@@ -9,15 +9,13 @@ import matplotlib.pyplot as plt
 
 class NmrAnalyzer:  # Make inherit from MainApp?
     """Encapsulates all NMR related integration data and methods."""
-    def __init__(self, lower_lim, upper_lim, file_path, file_name, **kwargs):
+    def __init__(self, analysis_section=None):
         """Analysis attributes """ 
         # Constructor
-        self.__lower_limit = float(lower_lim.get())  # tkinter var
-        self.__upper_lim = float(upper_lim.get())  # tkinter var
-        self.__file_path = file_path
-        self.__file_name = file_name.get()  # tkinter var
-        self.kw = kwargs
+        self.__analysis_section = analysis_section
 
+        # Convert limits to floats
+        self.__lower_lim = self.__analysis_section.info_entry_section
 
         # Results
         self.__x_arr = []  # Chemical shift ppm
@@ -52,7 +50,7 @@ class NmrAnalyzer:  # Make inherit from MainApp?
             cur_y = float(line.split("\t")[1])
 
             # Build lists for plotting
-            if (cur_x >= self.__lower_limit and cur_x <= self.__upper_lim):
+            if (cur_x >= self.__lower_lim and cur_x <= self.__upper_lim):
                 self.__x_arr.append(cur_x)
                 self.__y_arr.append(cur_y)
 

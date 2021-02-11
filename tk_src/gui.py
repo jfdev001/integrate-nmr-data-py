@@ -18,7 +18,9 @@ class SharedInfo:
         """Construct sections and initialize analysis_result."""
         # Construct MainWindow sections
         self.entry_section = EntrySection(window)
-        self.analysis_section = AnalysisSection(window, self.entry_section)
+        self.analysis_section = AnalysisSection(window, 
+                                                self.entry_section, 
+                                                self.analysis_result)
 
         # Store analysis result for use in AnalysisWindow later
         self.analysis_result = None  # Tuple (MyImage, str outfile)
@@ -60,22 +62,22 @@ class MainWindow:
         self.ias = self.info.analysis_section
 
         # LabelFrames
-        self.ies.frame.grid(row=0, column=0)
+        self.info.entry_section.frame.grid(row=0, column=0)
         self.ias.frame.grid(row=1, column=0)
 
         #----Entry Section----
         # Upper limit of integration
-        self.ies.upper_lim_label.grid(row=0, column=0, **self.padding,  
-                                      sticky=tk.W+tk.E, in_=self.ies.frame)
-        self.ies.upper_lim_entry.grid(row=0, column=1, columnspan=2,
-                                      **self.padding, in_=self.ies.frame)                             
+        self.info.entry_section.upper_lim_label.grid(row=0, column=0, **self.padding,  
+                                      sticky=tk.W+tk.E, in_=self.info.entry_section.frame)
+        self.info.entry_section.upper_lim_entry.grid(row=0, column=1, columnspan=2,
+                                      **self.padding, in_=self.info.entry_section.frame)                             
 
         # Lower limit of integration
-        self.ies.lower_lim_label.grid(row=1, column=0, **self.padding, 
-                                      sticky=tk.W+tk.E, in_=self.ies.frame) 
+        self.info.entry_section.lower_lim_label.grid(row=1, column=0, **self.padding, 
+                                      sticky=tk.W+tk.E, in_=self.info.entry_section.frame) 
                                                
-        self.ies.lower_lim_entry.grid(row=1, column=1, columnspan=2,
-                                      **self.padding, in_=self.ies.frame)
+        self.info.entry_section.lower_lim_entry.grid(row=1, column=1, columnspan=2,
+                                      **self.padding, in_=self.info.entry_section.frame)
         #----End Entry Section----
 
         #----Analysis Section----
@@ -146,7 +148,7 @@ class AnalysisSection:
         # Constructor
         self.window = window              # Same as MainWindow window
         self.ies = info_entry_section     # Shared info entry section
-        self.iar = info_analysis_results  # Tuple (MyImage, str outfile)
+        self.iar = info_analysis_results  # Tuple (MyImage, str outfile) -- is this reference?
 
         # LabelFrame
         self.frame = tk.LabelFrame(self.window, text="Analysis Frame", 
@@ -196,8 +198,7 @@ class AnalysisSection:
     def do_analysis(self):
         """Instantiate NmrAnalysis and return plots."""
         # Instantiate NmrAnalyzer
-        analyzer = NmrAnalyzer(self.lower_lim, self.upper_lim,
-                               self.file_path, self.file_name_var)
+        analyzer = NmrAnalyzer(self)
 
         # Set Tuple (figure PhotoImage, str outfile) result                       
         self.iar = analyzer.proc_data()
