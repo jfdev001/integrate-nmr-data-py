@@ -91,6 +91,7 @@ class MainWindow:
 
         return None
 
+
 class EntrySection:
     """Encapsulates Widgets for 'Entry Frame' LabelFrame.
 
