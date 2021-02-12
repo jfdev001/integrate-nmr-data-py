@@ -9,35 +9,37 @@ import matplotlib.pyplot as plt
 
 class NmrAnalyzer:  # Make inherit from MainApp?
     """Encapsulates all NMR related integration data and methods."""
-    def __init__(self, analysis_section=None):
+    def __init__(self, info=None):
         """Analysis attributes """ 
         # Constructor
-        self.__analysis_section = analysis_section
+        self.info = info
 
-        # Convert limits to floats
+        # Convert tkinter var limits to floats
+        self.lower_lim = float(self.info.entry_section.lower_lim_var.get())
+        self.upper_lim = float(self.info.entry_section.upper_lim_var.get())
 
         # Results
-        self.__x_arr = []  # Chemical shift ppm
-        self.__y_arr = []  # Peak intensity
-        self.__area = None
-        self.__figure = None
-        self.__log_text = None
+        self.x_arr = []  # Chemical shift ppm
+        self.y_arr = []  # Peak intensity
+        self.area = None
+        self.figure = None
+        self.log_text = None
 
 
     def proc_data(self):
         """Opens file, computes, and returns results and plot"""
         # Open file and build arrays
-        with open(self.__file_path, "r") as fobj:
+        with open(self.info.analysis_section.file_path, "r") as fobj:
             self.__build_arrays(fobj)
 
         # Get the log file
-        self.__log_text = self.__log()
+        self.log_text = self.__log()
 
         # Get the matplotlib plot 
-        self.__figure = self.__plot()
+        self.figure = self.__plot()
 
         # Return tuple
-        return (self.__figure, self.__log_text)
+        return (self.figure, self.log_text)
   
 
     def __build_arrays(self, fobj):
@@ -49,9 +51,9 @@ class NmrAnalyzer:  # Make inherit from MainApp?
             cur_y = float(line.split("\t")[1])
 
             # Build lists for plotting
-            if (cur_x >= self.__lower_lim and cur_x <= self.__upper_lim):
-                self.__x_arr.append(cur_x)
-                self.__y_arr.append(cur_y)
+            if (cur_x >= self.lower_lim and cur_x <= self.upper_lim):
+                self.x_arr.append(cur_x)
+                self.y_arr.append(cur_y)
 
         return None
 
@@ -62,11 +64,11 @@ class NmrAnalyzer:  # Make inherit from MainApp?
         fig, ax = plt.subplots()
 
         # Plot Axes object to Figure and label it
-        ax.plot(self.__x_arr, self.__y_arr)
+        ax.plot(self.x_arr, self.y_arr)
         ax.set_xlabel("Chemical Shift")
         ax.set_ylabel("Signal Intensity")
-        ax.set_title(f"Plot of {self.__file_name}")
-        ax.set_xlim(ax.get_xlim()[::-1])  # Reverse tuple and set range
+        ax.set_title(f"Plot of {self.info.analysis_section.file_name_var.get()}")
+        ax.set_xlim(ax.get_xlim()[::-1])
 
         # Convert plot to PhotoImage object
         buffer = io.BytesIO()  # Reserve memory for figure
@@ -80,15 +82,15 @@ class NmrAnalyzer:  # Make inherit from MainApp?
     def __log(self):
         """Integrates and returns outfile text."""
         # Reverse x & y list since np.trapz assumes ascending x & y
-        self.__x_arr.reverse()
-        self.__y_arr.reverse()
+        self.x_arr.reverse()
+        self.y_arr.reverse()
 
         # Area under the curve using trapezoidal integration
-        self.__area = np.trapz(y=self.__y_arr, x=self.__x_arr)
+        self.area = np.trapz(y=self.y_arr, x=self.x_arr)
 
         # Outfile text
         now = str(datetime.now())[:str(datetime.now()).index(".")]
-        text = f"FILE PATH,TIME,AREA\n{self.__file_path},{now},{self.__area}\n"
+        text = f"FILE PATH,TIME,AREA\n{self.info.analysis_section.file_path},{now},{self.area}\n"
 
         # Return outfile text
         return text
@@ -103,10 +105,16 @@ class MyImage:
 
     
     def get_opened_img(self):
-        """Return opened image private attr."""
+        """Return opened image private attr.
+        
+        One might do this because the PhotoImage has no write method.
+        """
         return self.__opened_img
 
 
     def get_photoimage(self):
-        """Return PhotoImage private attr."""
+        """Return PhotoImage private attr.
+        
+        One might do this to display it using tk.Label(image=...).
+        """
         return self.__photoimage

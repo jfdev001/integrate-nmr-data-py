@@ -1,5 +1,8 @@
 """GUI for processing nmr data, plotting it, and writing it to disk.
 
+The MainWindow is initialized with it's own instance variable of the 
+the <class SharedWindow> object. This instance is then passed around
+
 Subsections of a given window are separate classes.
 New windows (tkinter.Toplevel objects) are separate classes.
 """
@@ -13,40 +16,37 @@ from calculation_src.nmranalyzer import NmrAnalyzer
 
 
 class SharedInfo:
-    """Stores section and analysis information in one location."""
+    """Stores all shared information between sections via objects.  """
     def __init__(self, window=None):
         """Construct sections and initialize analysis_result."""
-        # Construct MainWindow sections
-        self.entry_section = EntrySection(window)
-        self.analysis_section = AnalysisSection(window, self)  # Is this valid?
-
-        # Store analysis result for use in AnalysisWindow later
-        self.analysis_result = None  # Tuple (MyImage, str outfile)
+        # Construct MainWindow window and sections
+        self.window = window
+        self.entry_section = EntrySection(self)
+        self.analysis_section = AnalysisSection(self)
 
 
 class MainWindow:
     """GUI for integration script."""
     def __init__(self, window=None):
         """Initialize window Frame and instantiate other Widgets."""
-        # Constructor
-        self.window = window
-        self.info = SharedInfo(self.window)
+        # Constructor for shared info instance var
+        self.info = SharedInfo(window)
 
         # Set geometry
-        self.window.geometry("475x215")  # Initial dimensions of widget
-        self.window.resizable(0, 0)  # No resize in x or y direction
+        self.info.window.geometry("475x215")
+        self.info.window.resizable(0, 0)
 
         # Frame 
-        self.frame = tk.Frame(self.window).grid()
+        self.frame = tk.Frame(self.info.window).grid()
 
         # Set icon
         self.this_folder = os.path.dirname(os.path.abspath(__file__))
         self.img_path = os.path.join(self.this_folder, "imgs/icon.png") 
         self.icon = ImageTk.PhotoImage(file=self.img_path)
-        self.window.iconphoto(True, self.icon)
+        self.info.window.iconphoto(True, self.icon)
 
         # Set title
-        self.window.title("NMR Inte-great!")
+        self.info.window.title("NMR Inte-great!")
 
         # Grid Widgets to screen
         self.padding = {"padx": 2, "pady": 2, "ipady": 2, "ipadx": 2}
@@ -54,7 +54,7 @@ class MainWindow:
 
 
     def grid_widgets(self):
-        """Control the geometry of the Widgets for MainApp."""
+        """Control the geometry of the Widgets for MainWindow."""
         # LabelFrames
         self.info.entry_section.frame.grid(row=0, column=0)
         self.info.analysis_section.frame.grid(row=1, column=0)
@@ -94,15 +94,15 @@ class MainWindow:
 class EntrySection:
     """Encapsulates Widgets for 'Entry Frame' LabelFrame.
 
-    This class is bound to the MainApp window.
+    This class is bound to the MainWindow window.
     """
-    def __init__(self, window=None):
+    def __init__(self, info=None):
         """Define Widgets for this LabelFrame."""
-        # Constructor: Window of MainWindow is also window of this class
-        self.window = window
+        # Construct info
+        self.info = info
 
         # LabelFrame
-        self.frame = tk.LabelFrame(self.window, 
+        self.frame = tk.LabelFrame(self.info.window, 
                                     text="Entry Frame",
                                     padx=5,
                                     pady=10)
@@ -111,54 +111,54 @@ class EntrySection:
         self.style = {"relief": tk.SUNKEN, "width": 49}
 
         # Upper limit of integration
-        self.upper_lim_label = tk.Label(self.window,
-                                          text="Upper Limit of Integration:",
-                                          relief=tk.RAISED,
-                                          bg="floral white")
-        self.upper_lim_var = tk.StringVar(self.window, value=None)
-        self.upper_lim_entry = tk.Entry(self.window,
-                                          textvariable=self.upper_lim_var,
-                                          **self.style)
+        self.upper_lim_label = tk.Label(self.info.window,
+                                        text="Upper Limit of Integration:",
+                                        relief=tk.RAISED,
+                                        bg="floral white")
+        self.upper_lim_var = tk.StringVar(self.info.window, value=None)
+        self.upper_lim_entry = tk.Entry(self.info.window,
+                                        textvariable=self.upper_lim_var,
+                                        **self.style)
 
         # Lower limit of integration
-        self.lower_lim_label = tk.Label(self.window,
+        self.lower_lim_label = tk.Label(self.info.window,
                                     text="Lower Limit of Integration:",
                                     relief=tk.RAISED,
                                     bg="floral white")
-        self.lower_lim_var = tk.StringVar(self.window, value=None)
-        self.lower_lim_entry = tk.Entry(self.window,
-                                          textvariable=self.lower_lim_var,
-                                          **self.style)
+        self.lower_lim_var = tk.StringVar(self.info.window, value=None)
+        self.lower_lim_entry = tk.Entry(self.info.window,
+                                        textvariable=self.lower_lim_var,
+                                        **self.style)
 
 
 class AnalysisSection:
     """Encapsulates Widgets for 'Analysis Frame' LabelFrame.
 
-    This class is bound to the MainApp window.
+    This class is bound to the MainWindow window.
     """
-    def __init__(self, window=None, info_entry_section=None, 
-                 info_analysis_results=None):
+    def __init__(self, info=None):
         """Define widgets for this LabelFrame."""
         # Constructor
-        self.window = window              # Same as MainWindow window
-        self.ies = info_entry_section     # Shared info entry section
-        self.iar = info_analysis_results  # Tuple (MyImage, str outfile) -- is this reference?
+        self.info = info
+
+        # Tuple (MyImage, str outfile)
+        self.analysis_result = None
 
         # LabelFrame
-        self.frame = tk.LabelFrame(self.window, text="Analysis Frame", 
+        self.frame = tk.LabelFrame(self.info.window, text="Analysis Frame", 
                                    padx=5, pady=5, width=40) 
         
         # File dialog
-        self.home = str(Path.home())  # Path to home directory
-        self.file_types = (("asc files", "*.asc"),)
-        self.file_path = None
-        self.file_name_var = tk.StringVar(self.window, 
+        self.home = str(Path.home())                 
+        self.file_types = (("asc files", "*.asc"),)  
+        self.file_path = None                         
+        self.file_name_var = tk.StringVar(self.info.window, 
                                           value="File Name Displays Here")
-        self.file_button = tk.Button(self.window, 
+        self.file_button = tk.Button(self.info.window, 
                               text="Click to Choose .ASC File",
                               command=self.open_dialog,
                               bg = "bisque")
-        self.file_label = tk.Label(self.window, 
+        self.file_label = tk.Label(self.info.window, 
                                    textvariable=self.file_name_var,
                                    width=40,
                                    bd=4,
@@ -166,7 +166,7 @@ class AnalysisSection:
                                    wraplength=280)
 
         # Analyze button
-        self.analysis_button = tk.Button(self.window,
+        self.analysis_button = tk.Button(self.info.window,
                                          text="Click to Analyze Data",
                                          command=self.do_analysis,
                                          bg="bisque")
@@ -192,10 +192,10 @@ class AnalysisSection:
     def do_analysis(self):
         """Instantiate NmrAnalysis and return plots."""
         # Instantiate NmrAnalyzer
-        analyzer = NmrAnalyzer(self)
+        analyzer = NmrAnalyzer(self.info)
 
         # Set Tuple (figure PhotoImage, str outfile) result                       
-        self.iar = analyzer.proc_data()
+        self.analysis_result = analyzer.proc_data()
 
         # Create new window for matplotlib figure
         self.new_window()
@@ -211,9 +211,8 @@ class AnalysisSection:
         window instance under the existing tk.Tk() object versus 
         creating a completely new tk.Tk() object.
         """
-        self.analysis_window = AnalysisWindow(tk.Toplevel(self.window), 
-                                              self.analysis_result,
-                                              self.entry_section)
+        self.analysis_window = AnalysisWindow(tk.Toplevel(self.info.window), 
+                                              self.info)
 
         return None
 
@@ -225,27 +224,23 @@ class AnalysisWindow:
     There is no need to create a frame for rendering the window itself
     since the tk.Toplevel Widget behaves like a frame.
     """
-    def __init__(self, new_window=None, analysis_result=None, 
-                 entry_section=None):
+    def __init__(self, new_window=None, info=None):
         """Initialize new analysis window and some configuration."""
         # Constructor
-        self.new_window = new_window  # Control frame
-        self.analysis_result = analysis_result  # (MyImage, str log)
-        self.entry_section = entry_section  # Entry section for MenuSection
+        self.new_window = new_window
+        self.info = info
 
         # Title
         self.new_window.title("Data Analysis Window")
 
-        # Tuple (MyImage, str log)
-        self.analysis_result = analysis_result
-
         # Plot label
-        self.plot_label = tk.Label(self.new_window,
-                                image=self.analysis_result[0].get_photoimage(),
-                                relief=tk.RAISED)
+        plot = self.info.analysis_section.analysis_result[0].get_photoimage()
+        self.plot_label = tk.Label(self.new_window, image=plot, 
+                                   relief=tk.RAISED)
 
         # Outfile
-        self.outfile_area = self.analysis_result[1].split(",")[-1]
+        area = self.info.analysis_section.analysis_result[1].split(",")[-1].strip()
+        self.outfile_area = area
         self.outfile_label = tk.Label(self.new_window, 
                                       text=f"Area: {self.outfile_area}",
                                       relief=tk.SUNKEN)
@@ -255,8 +250,7 @@ class AnalysisWindow:
         self.grid_widgets()
 
         # Menu
-        self.menu_section = MenuSection(self.new_window, self.entry_section,
-                                        self.analysis_result)
+        self.menu_section = MenuSection(self.new_window, self.info)
 
 
     def grid_widgets(self):
@@ -269,21 +263,19 @@ class AnalysisWindow:
 
 
 class MenuSection:
-    """Encapsulates Widgets and methods for a menu.
+    """Encapsulates Widgets and methods for a menu bar.
 
     This class is bound to the AnalysisWindow window.
 
-    The purpose of the menu is to prompt the user to save
+    The purpose of the menu is to let the user save
     the matplotlib image and the outfile, the outfile alone, or the
-    plot.
+    matplotlib image alone.
     """
-    def __init__(self, window=None, entry_section=None,
-                 analysis_result=None):
+    def __init__(self, window=None, info=None):
         """Create the menubar and subsequent pulldowns (cascading)."""
         # Constructor
         self.window = window
-        self.entry_section = entry_section  # For naming plot and outfiles 
-        self.analysis_result = analysis_result
+        self.info = info
 
         # Main menu
         self.main_menu = tk.Menu(self.window)
@@ -315,6 +307,7 @@ class MenuSection:
         # Configure window
         self.window.config(menu=self.main_menu)
 
+
     def save_plot(self):
         """Save the the matplotlib photoimage only.
         
@@ -332,8 +325,8 @@ class MenuSection:
                                                 ("svg files", "*.svg"),
                                                 ("jpg files", "*.jpg")))
 
-        # Save using PhotoImage file attr, which is file=Image.open()
-        img = self.analysis_result[0].get_opened_img()
+        # Get the <class Image> attr from <class MyImage> object
+        img = self.info.analysis_section.analysis_result[0].get_opened_img()
         img.save(os.path.join(save_dir, save_fname))
 
         return None
@@ -356,7 +349,7 @@ class MenuSection:
 
         # Save the file
         with open(os.path.join(save_dir, save_fname), "w") as fobj:
-            fobj.write(self.analysis_result[1])
+            fobj.write(self.info.analysis_section.analysis_result[1])
 
         return None
 
