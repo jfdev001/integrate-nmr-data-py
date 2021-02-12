@@ -14,13 +14,11 @@ from calculation_src.nmranalyzer import NmrAnalyzer
 
 class SharedInfo:
     """Stores section and analysis information in one location."""
-    def __init__(self, window):
+    def __init__(self, window=None):
         """Construct sections and initialize analysis_result."""
         # Construct MainWindow sections
         self.entry_section = EntrySection(window)
-        self.analysis_section = AnalysisSection(window, 
-                                                self.entry_section, 
-                                                self.analysis_result)
+        self.analysis_section = AnalysisSection(window, self)  # Is this valid?
 
         # Store analysis result for use in AnalysisWindow later
         self.analysis_result = None  # Tuple (MyImage, str outfile)
@@ -57,13 +55,9 @@ class MainWindow:
 
     def grid_widgets(self):
         """Control the geometry of the Widgets for MainApp."""
-        # Shorthand variables for each section
-        self.ies = self.info.entry_section
-        self.ias = self.info.analysis_section
-
         # LabelFrames
         self.info.entry_section.frame.grid(row=0, column=0)
-        self.ias.frame.grid(row=1, column=0)
+        self.info.analysis_section.frame.grid(row=1, column=0)
 
         #----Entry Section----
         # Upper limit of integration
@@ -82,17 +76,17 @@ class MainWindow:
 
         #----Analysis Section----
         # File dialog button
-        self.ias.file_button.grid(row=3, column=0, sticky=tk.W,
+        self.info.analysis_section.file_button.grid(row=3, column=0, sticky=tk.W,
                                   ipady=5, ipadx=5, padx=5, pady=5, 
-                                  in_=self.ias.frame)
-        self.ias.file_label.grid(row=4, column=0, columnspan=2, 
+                                  in_=self.info.analysis_section.frame)
+        self.info.analysis_section.file_label.grid(row=4, column=0, columnspan=2, 
                                  sticky=tk.W+tk.E, **self.padding, 
-                                 in_=self.ias.frame)
+                                 in_=self.info.analysis_section.frame)
 
         # Data analysis button
-        self.ias.analysis_button.grid(row=3, column=1, sticky=tk.W,
+        self.info.analysis_section.analysis_button.grid(row=3, column=1, sticky=tk.W,
                                       ipady=5, ipadx=5, padx=5, pady=5,
-                                      in_=self.ias.frame)
+                                      in_=self.info.analysis_section.frame)
         #----End Analysis Section----
 
         return None

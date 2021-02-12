@@ -15,7 +15,6 @@ class NmrAnalyzer:  # Make inherit from MainApp?
         self.__analysis_section = analysis_section
 
         # Convert limits to floats
-        self.__lower_lim = self.__analysis_section.info_entry_section
 
         # Results
         self.__x_arr = []  # Chemical shift ppm
