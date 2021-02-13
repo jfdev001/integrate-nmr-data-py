@@ -19,10 +19,12 @@ class NmrAnalyzer:  # Make inherit from MainApp?
         self.upper_lim = float(self.info.entry_section.upper_lim_var.get())
 
         # Results
-        self.x_arr = []  # Chemical shift ppm
-        self.y_arr = []  # Peak intensity
+        self.x_arr = []           # Chemical shift ppm
+        self.y_arr = []           # Peak intensity
         self.area = None
-        self.figure = None
+        self.tk_figure = None
+        self.fig = None           # Matplotlib <Figure object>
+        self.ax = None            # Matplotlib <Axes object>
         self.log_text = None
 
 
@@ -30,22 +32,22 @@ class NmrAnalyzer:  # Make inherit from MainApp?
         """Opens file, computes, and returns results and plot"""
         # Open file and build arrays
         with open(self.info.analysis_section.file_path, "r") as fobj:
-            self.__build_arrays(fobj)
+            self.build_arrays(fobj)
 
         # Get the log file
-        self.log_text = self.__log()
+        self.log_text = self.log()
 
-        # Get the matplotlib plot 
-        self.figure = self.__plot()
+        # Get the matplotlib plot as a <PlotImage object>
+        self.tk_figure = self.plot()
 
         # Return tuple
-        return (self.figure, self.log_text)
+        return (self.tk_figure, self.log_text)
   
 
-    def __build_arrays(self, fobj):
+    def build_arrays(self, fobj):
         """Build x and y arrays from .asc file."""
         # Iterate through data file
-        next(fobj)  # Skip first line that is categorical info
+        next(fobj)
         for line in fobj:
             cur_x = float(line.split("\t")[0])
             cur_y = float(line.split("\t")[1])
@@ -58,28 +60,34 @@ class NmrAnalyzer:  # Make inherit from MainApp?
         return None
 
 
-    def __plot(self):
+    def plot(self, xlabel="Chemical", ylabel="Signal Intensity", 
+            title=f"Plot of {self.info.analysis_section.file_name_var.get()}",
+            configure=False):
         """Matplotlib to plot the figure.""" 
         # Instantiate Figure and Axes objects
-        fig, ax = plt.subplots()
+        self.fig, self.ax = plt.subplots()
 
         # Plot Axes object to Figure and label it
-        ax.plot(self.x_arr, self.y_arr)
-        ax.set_xlabel("Chemical Shift")
-        ax.set_ylabel("Signal Intensity")
-        ax.set_title(f"Plot of {self.info.analysis_section.file_name_var.get()}")
-        ax.set_xlim(ax.get_xlim()[::-1])
+        self.ax.plot(self.x_arr, self.y_arr)
+        self.ax.set_xlabel(xlabel)
+        self.ax.set_ylabel(ylabel)
+        self.ax.set_title(title)
+        self.ax.set_xlim(ax.get_xlim()[::-1])
 
         # Convert plot to PhotoImage object
         buffer = io.BytesIO()  # Reserve memory for figure
         fig.savefig(buffer)    # Save figure in that memory
         plot_img = PlotImage(Image.open(buffer))  # Use w/ tk
 
+        # Update plot label dynamically
+        if not configure:
+            
+
         # Return the PhotoImage object
         return plot_img
 
     
-    def __log(self):
+    def log(self):
         """Integrates and returns outfile text."""
         # Reverse x & y list since np.trapz assumes ascending x & y
         self.x_arr.reverse()

@@ -23,6 +23,7 @@ class SharedInfo:
         self.window = window
         self.entry_section = EntrySection(self)
         self.analysis_section = AnalysisSection(self)
+        self.plot_label = None
 
 
 class MainWindow:
@@ -251,7 +252,7 @@ class AnalysisWindow:
         self.grid_widgets()
 
         # Menu
-        self.menu_section = MenuSection(self.new_window, self.info)
+        self.menu_section = MenuSection(self)
 
 
     def grid_widgets(self):
@@ -272,11 +273,11 @@ class MenuSection:
     the matplotlib image and the outfile, the outfile alone, or the
     matplotlib image alone.
     """
-    def __init__(self, window=None, info=None):
+    def __init__(self, analysis_window):
         """Create the menubar and subsequent pulldowns (cascading)."""
         # Constructor
-        self.window = window
-        self.info = info
+        self.window = analysis_window.new_window
+        self.info = analysis_window.info
 
         # Main menu
         self.main_menu = tk.Menu(self.window)
