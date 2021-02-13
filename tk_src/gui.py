@@ -23,7 +23,6 @@ class SharedInfo:
         self.window = window
         self.entry_section = EntrySection(self)
         self.analysis_section = AnalysisSection(self)
-        self.plot_label = None
 
 
 class MainWindow:
@@ -146,6 +145,9 @@ class AnalysisSection:
         # Tuple (MyImage, str outfile)
         self.analysis_result = None
 
+        # <NmrAnalyzer object>
+        self.analyzer = None
+
         # LabelFrame
         self.frame = tk.LabelFrame(self.info.window, text="Analysis Frame", 
                                    padx=5, pady=5, width=40) 
@@ -194,10 +196,10 @@ class AnalysisSection:
     def do_analysis(self):
         """Instantiate NmrAnalysis and return plots."""
         # Instantiate NmrAnalyzer
-        analyzer = NmrAnalyzer(self.info)
+        self.analyzer = NmrAnalyzer(self.info)
 
         # Set Tuple (figure PhotoImage, str outfile) result                       
-        self.analysis_result = analyzer.proc_data()
+        self.analysis_result = self.analyzer.proc_data()
 
         # Create new window for matplotlib figure
         self.new_window()
@@ -259,7 +261,6 @@ class AnalysisWindow:
         """Control geometry of Widgets for AnalysisWindow."""
         self.plot_label.grid(row=0, column=0)
         self.outfile_label.grid(row=1, column=0)
-        
 
         return None
 
@@ -276,8 +277,9 @@ class MenuSection:
     def __init__(self, analysis_window):
         """Create the menubar and subsequent pulldowns (cascading)."""
         # Constructor
-        self.window = analysis_window.new_window
-        self.info = analysis_window.info
+        self.analysis_window = analysis_window
+        self.window = self.analysis_window.new_window
+        self.info = self.analysis_window.info
 
         # Main menu
         self.main_menu = tk.Menu(self.window)
@@ -370,6 +372,9 @@ class MenuSection:
     
     def new_title(self):
         """New title for matplotlib plot."""
+        new_title = "Test"
+        self.info.analysis_section.analyzer.plot(title=new_title, configure=True, 
+                                    plot_label=self.analysis_window.plot_label)
         return None
 
     

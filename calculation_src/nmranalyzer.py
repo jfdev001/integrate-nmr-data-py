@@ -61,9 +61,13 @@ class NmrAnalyzer:  # Make inherit from MainApp?
 
 
     def plot(self, xlabel="Chemical", ylabel="Signal Intensity", 
-            title=f"Plot of {self.info.analysis_section.file_name_var.get()}",
-            configure=False):
+            title=None,
+            configure=False, plot_label=None):
         """Matplotlib to plot the figure.""" 
+        # Default title
+        if title is None:
+            title = f"Plot of {self.info.analysis_section.file_name_var.get()}"
+
         # Instantiate Figure and Axes objects
         self.fig, self.ax = plt.subplots()
 
@@ -72,17 +76,17 @@ class NmrAnalyzer:  # Make inherit from MainApp?
         self.ax.set_xlabel(xlabel)
         self.ax.set_ylabel(ylabel)
         self.ax.set_title(title)
-        self.ax.set_xlim(ax.get_xlim()[::-1])
+        self.ax.set_xlim(self.ax.get_xlim()[::-1])
 
         # Convert plot to PhotoImage object
         buffer = io.BytesIO()  # Reserve memory for figure
-        fig.savefig(buffer)    # Save figure in that memory
+        self.fig.savefig(buffer)    # Save figure in that memory
         plot_img = PlotImage(Image.open(buffer))  # Use w/ tk
 
-        # Update plot label dynamically
-        if not configure:
-            
-
+        # Configure the plot_label in AnalysisWindow
+        if configure:
+            plot_label.config(image=plot_img)
+        
         # Return the PhotoImage object
         return plot_img
 
