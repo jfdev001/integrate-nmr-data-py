@@ -72,11 +72,12 @@ class NmrAnalyzer:  # Make inherit from MainApp?
         self.fig, self.ax = plt.subplots()
 
         # Plot Axes object to Figure and label it
-        self.ax.plot(self.x_arr, self.y_arr)
+        self.ax.plot(np.array(self.x_arr), np.array(self.y_arr))
         self.ax.set_xlabel(xlabel)
         self.ax.set_ylabel(ylabel)
         self.ax.set_title(title)
         self.ax.set_xlim(self.ax.get_xlim()[::-1])
+        self.ax.fill_between(self.x_arr, self.y_arr)
 
         # Convert plot to PhotoImage object
         buffer = io.BytesIO()       # Reserve memory for figure
