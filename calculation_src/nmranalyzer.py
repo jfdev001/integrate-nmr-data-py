@@ -22,9 +22,9 @@ class NmrAnalyzer:  # Make inherit from MainApp?
         self.x_arr = []           # Chemical shift ppm
         self.y_arr = []           # Peak intensity
         self.area = None
-        self.tk_figure = None
         self.fig = None           # Matplotlib <Figure object>
         self.ax = None            # Matplotlib <Axes object>
+        self.plot_img = None      # <PlotImage object>
         self.log_text = None
 
 
@@ -34,14 +34,14 @@ class NmrAnalyzer:  # Make inherit from MainApp?
         with open(self.info.analysis_section.file_path, "r") as fobj:
             self.build_arrays(fobj)
 
-        # Get the log file
-        self.log_text = self.log()
+        # Set the log file
+        self.log()
 
-        # Get the matplotlib plot as a <PlotImage object>
-        self.tk_figure = self.plot()
+        # Set the matplotlib plot as a <PlotImage object>
+        self.plot()
 
         # Return tuple
-        return (self.tk_figure, self.log_text)
+        return (self.plot_img, self.log_text)
   
 
     def build_arrays(self, fobj):
@@ -60,7 +60,7 @@ class NmrAnalyzer:  # Make inherit from MainApp?
         return None
 
 
-    def plot(self, xlabel="Chemical", ylabel="Signal Intensity", 
+    def plot(self, xlabel="Chemical Shift", ylabel="Signal Intensity", 
             title=None,
             configure=False, plot_label=None):
         """Matplotlib to plot the figure.""" 
@@ -79,20 +79,18 @@ class NmrAnalyzer:  # Make inherit from MainApp?
         self.ax.set_xlim(self.ax.get_xlim()[::-1])
 
         # Convert plot to PhotoImage object
-        buffer = io.BytesIO()  # Reserve memory for figure
+        buffer = io.BytesIO()       # Reserve memory for figure
         self.fig.savefig(buffer)    # Save figure in that memory
-        plot_img = PlotImage(Image.open(buffer))  # Use w/ tk
+        self.plot_img = PlotImage(Image.open(buffer))  # Use w/ tk
 
         # Configure the plot_label in AnalysisWindow
         if configure:
-            plot_label.config(image=plot_img)
-        
-        # Return the PhotoImage object
-        return plot_img
+            plot_label.config(image=self.plot_img.get_photoimage())
 
+        return None
     
     def log(self):
-        """Integrates and returns outfile text."""
+        """Integrates and sets outfile text."""
         # Reverse x & y list since np.trapz assumes ascending x & y
         self.x_arr.reverse()
         self.y_arr.reverse()
@@ -102,11 +100,11 @@ class NmrAnalyzer:  # Make inherit from MainApp?
 
         # Outfile text
         now = str(datetime.now())[:str(datetime.now()).index(".")]
-        text = f"FILE PATH,TIME,AREA\n{self.info.analysis_section.file_path},{now},{self.area}\n"
+        self.log_text = f"FILE PATH,TIME,AREA\n \
+                         {self.info.analysis_section.file_path}, \
+                         {now},{self.area}\n"
 
-        # Return outfile text
-        return text
-
+        return None
 
 class PlotImage:
     """Makes Image object used in PhotoImage init accessible."""
