@@ -89,6 +89,7 @@ class NmrAnalyzer:  # Make inherit from MainApp?
 
         return None
     
+
     def log(self):
         """Integrates and sets outfile text."""
         # Reverse x & y list since np.trapz assumes ascending x & y
@@ -105,6 +106,7 @@ class NmrAnalyzer:  # Make inherit from MainApp?
                          {now},{self.area}\n"
 
         return None
+
 
 class PlotImage:
     """Makes Image object used in PhotoImage init accessible."""
