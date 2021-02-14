@@ -36,6 +36,8 @@ class MainWindow:
         self.info.window.geometry("475x215")
         self.info.window.resizable(0, 0)
 
+        # <>
+
         # Frame 
         self.frame = tk.Frame(self.info.window).grid()
 
@@ -147,6 +149,8 @@ class AnalysisSection:
 
         # <NmrAnalyzer object>
         self.analyzer = None
+
+        # <Widget.Toplevel object> 
 
         # LabelFrame
         self.frame = tk.LabelFrame(self.info.window, text="Analysis Frame", 
@@ -384,5 +388,11 @@ class MenuSection:
             pass
         else:
             pass
+        return None
+
+
+class PlotOptionsWindow:
+    """<Widget.Toplevel object> for changing the plot label elements."""
+    def __init__(self, new_window=None):
         return None
 
