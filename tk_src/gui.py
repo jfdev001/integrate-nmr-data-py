@@ -304,20 +304,15 @@ class MenuSection:
         self.save_options_menu.add_command(label="Save Both",
                                            command=self.save_both)
 
-        # Define cascading menu for plot_options
-        self.plot_options_menu = tk.Menu(self.main_menu, tearoff=0)
-        self.plot_options_menu.add_command(label="New Title", 
-                                           command=self.new_title)
-        self.plot_options_menu.add_command(label="New X-Label",
-                                           command=lambda : self.new_ax("x"))
-        self.plot_options_menu.add_command(label="New Y-Label",
-                                           command=lambda : self.new_ax("y"))
+        # Define single click menu for plot_options
+        self.plot_options_menu = tk.Menu(self.main_menu, tearoff=0,
+                                         postcommand=self.new_title)
 
         # Add the cascading menus to the main_menu
         self.main_menu.add_cascade(label="Save Options", 
                                    menu=self.save_options_menu)
-        self.main_menu.add_cascade(label="Plot Options",
-                                   menu=self.plot_options_menu)
+        self.main_menu.add_cascade(label="Plot Options", 
+                                  menu=self.plot_options_menu)
         
         # Configure window
         self.window.config(menu=self.main_menu)
@@ -395,7 +390,7 @@ class MenuSection:
             self.new_window("x-axis")
         else:
             self.new_window("y-axis")
-            
+
         return None
 
 
