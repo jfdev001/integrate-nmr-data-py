@@ -60,7 +60,7 @@ class NmrAnalyzer:  # Make inherit from MainApp?
         return None
 
 
-    def plot(self, xlabel="Chemical Shift", ylabel="Signal Intensity", 
+    def plot(self, xlabel="Chemical Shift (PPM)", ylabel="Signal Intensity", 
             title=None,
             configure=False, plot_label=None):
         """Matplotlib to plot the figure.""" 
