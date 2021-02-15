@@ -5,6 +5,7 @@ Tkinter GUI that performs trapezoidal sum on Nuclear Magnetic Resonance peak lis
 -- How to organize toplevel widgets
    e.g. self.analysis_window in MainWindow
    and  self.plot_options_window in AnalysisWindow
+   Possibly rename to toplevel1, toplevel2 etc.
 -- The organization for this is just not good at this point
    too many method calls to keep track of things. What would be a good way to organize this? Draw diagrams and see how information is shared
 -- May be worth splitting all classes into separate files for 

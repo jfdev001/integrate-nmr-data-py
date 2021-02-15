@@ -392,9 +392,10 @@ class MenuSection:
     def new_ax(self, ax=None):
         """New axis label for matplotlib plot."""
         if (ax == "x"):
-            pass
+            self.new_window("x-axis")
         else:
-            pass
+            self.new_window("y-axis")
+            
         return None
 
 
