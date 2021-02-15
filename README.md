@@ -2,8 +2,9 @@
 Basic Script to perform trapezoidal sum on NMR peak list data (*.asc)
 
 ## WHAT'S NEXT:
--- Rename master to window instead for clarity.
--- Reorganize classes for inheritance purposes
+-- How to organize toplevel widgets
+   e.g. self.analysis_window in MainWindow
+   and  self.plot_options_window in AnalysisWindow
 
 ## Documentation:
    **Tkinter:**

@@ -12,6 +12,7 @@ import tkinter.filedialog as fd
 from PIL import ImageTk
 import os
 from pathlib import Path
+import time
 from calculation_src.nmranalyzer import NmrAnalyzer
 
 
@@ -288,6 +289,12 @@ class MenuSection:
         # Main menu
         self.main_menu = tk.Menu(self.window)
 
+        # tkinter vars for plot
+        self.title_var = tk.StringVar(self.info.window, value=None)
+        self.x_label_var = tk.StringVar(self.info.window, value=None)
+        self.y_label_var = tk.StringVar(self.info.window, value=None)
+        self.exit_var = tk.BooleanVar(self.info.window, value=False)
+
         # Define cascading menu for save_options
         self.save_options_menu = tk.Menu(self.main_menu, tearoff=0)
         self.save_options_menu.add_command(label="Save Plot",
@@ -376,9 +383,16 @@ class MenuSection:
     
     def new_title(self):
         """New title for matplotlib plot."""
-        new_title = "Test"
-        self.info.analysis_section.analyzer.plot(title=new_title, configure=True, 
-                                    plot_label=self.analysis_window.plot_label)
+        # Call new_window function and instantiate <PlotWindow object>
+        self.new_window("title")
+
+        # Loop until exit gets set -- constantly updates title_var
+        # while not self.exit_var.get():
+        #     # Use <NmrAnalyzer object> to configure the plot_label
+        #     time.sleep(5)
+        #     self.info.analysis_section.analyzer.plot(title=self.title_var.get(), 
+        #                                 configure=True, 
+        #                                 plot_label=self.analysis_window.plot_label)
         return None
 
     
@@ -391,8 +405,58 @@ class MenuSection:
         return None
 
 
+    def new_window(self, option=None):
+        """Creates a window for plot options input. 
+
+        This windows parent is the AnalysisWindow
+        """
+        self.plot_options_window = PlotOptionsWindow(tk.Toplevel(self.info.window),
+                               option=option, menu_section=self,
+                               exit_var=self.exit_var)
+
+
 class PlotOptionsWindow:
-    """<Widget.Toplevel object> for changing the plot label elements."""
-    def __init__(self, new_window=None):
-        return None
+    def __init__(self, new_window=None, option=None, menu_section=None,
+                 exit_var=None):
+        # Constructor
+        self.new_window = new_window
+        self.option = option
+        self.exit = exit_var
+
+        # Styling
+        self.style = {}
+
+        # Set the entry text
+        if option == "title":
+            self.entry = tk.Entry(self.new_window, 
+                                  textvariable=menu_section.title_var,
+                                  **self.style)
+        elif option == "ax_x":
+            self.entry = tk.Entry(self.new_window, 
+                                  textvariable=menu_section.x_label_var,
+                                  **self.style)
+        elif option == "ax_y":
+            self.entry = tk.Entry(self.new_window, 
+                                  textvariable=menu_section.y_label_var,
+                                  **self.style)
+
+        # Button that 'submits' change i.e. updates exit loop
+        self.button = tk.Button(self.new_window, text="Click to Submit Change",
+                                command=self.control,
+                                **self.style)
+
+        # Grid Widgets
+        self.grid_widgets()
+
+
+    def grid_widgets(self):
+        """Control geometry of widgets."""  
+        self.entry.pack()
+        self.button.pack()
+
+    
+    def control(self):
+        """Update exit variable and destroy this window."""
+        self.exit.set(True)
+        self.new_window.destroy()
 
