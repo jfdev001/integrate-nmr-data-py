@@ -289,7 +289,7 @@ class MenuSection:
         # Main menu
         self.main_menu = tk.Menu(self.window)
 
-        # tkinter vars for plot
+        # tkinter vars for plot -- maybe move these elsewhere
         self.title_var = tk.StringVar(self.info.window, value=None)
         self.x_label_var = tk.StringVar(self.info.window, value=None)
         self.y_label_var = tk.StringVar(self.info.window, value=None)
@@ -386,13 +386,6 @@ class MenuSection:
         # Call new_window function and instantiate <PlotWindow object>
         self.new_window("title")
 
-        # Loop until exit gets set -- constantly updates title_var
-        # while not self.exit_var.get():
-        #     # Use <NmrAnalyzer object> to configure the plot_label
-        #     time.sleep(5)
-        #     self.info.analysis_section.analyzer.plot(title=self.title_var.get(), 
-        #                                 configure=True, 
-        #                                 plot_label=self.analysis_window.plot_label)
         return None
 
     
@@ -411,39 +404,41 @@ class MenuSection:
         This windows parent is the AnalysisWindow
         """
         self.plot_options_window = PlotOptionsWindow(tk.Toplevel(self.info.window),
-                               option=option, menu_section=self,
-                               exit_var=self.exit_var)
+                               option=option, menu_section=self)
 
 
 class PlotOptionsWindow:
-    def __init__(self, new_window=None, option=None, menu_section=None,
-                 exit_var=None):
+    def __init__(self, new_window=None, option=None, menu_section=None):
         # Constructor
         self.new_window = new_window
         self.option = option
-        self.exit = exit_var
+        self.menu_section = menu_section
+        self.info = self.menu_section.info
 
         # Styling
-        self.style = {}
+        self.style = {"width": 40}
+        self.grid_style = {"padx": 2, "pady": 2, "ipady": 2, "ipadx": 2}
+        self.new_window.title("Plot Option")
 
         # Set the entry text
-        if option == "title":
+        if self.option == "title":
             self.entry = tk.Entry(self.new_window, 
-                                  textvariable=menu_section.title_var,
+                                  textvariable=self.menu_section.title_var,
                                   **self.style)
-        elif option == "ax_x":
+        elif self.option == "x-axis":
             self.entry = tk.Entry(self.new_window, 
-                                  textvariable=menu_section.x_label_var,
+                                  textvariable=self.menu_section.x_label_var,
                                   **self.style)
-        elif option == "ax_y":
+        elif self.option == "y-axis":
             self.entry = tk.Entry(self.new_window, 
-                                  textvariable=menu_section.y_label_var,
+                                  textvariable=self.menu_section.y_label_var,
                                   **self.style)
 
         # Button that 'submits' change i.e. updates exit loop
         self.button = tk.Button(self.new_window, text="Click to Submit Change",
-                                command=self.control,
-                                **self.style)
+                                command=self.submit,
+                                **self.style,
+                                bg="bisque")
 
         # Grid Widgets
         self.grid_widgets()
@@ -451,12 +446,29 @@ class PlotOptionsWindow:
 
     def grid_widgets(self):
         """Control geometry of widgets."""  
-        self.entry.pack()
-        self.button.pack()
+        self.entry.grid(row=0, column=0, columnspan=3, **self.grid_style)
+        self.button.grid(row=1, column=1, **self.grid_style)
 
     
-    def control(self):
-        """Update exit variable and destroy this window."""
-        self.exit.set(True)
+    def submit(self):
+        """Update plot and destroy this window."""
+        # Which plot function to call
+        if self.option == "title":
+            self.info.analysis_section.analyzer.plot(
+                    title=self.menu_section.title_var.get(), 
+                    configure=True, 
+                    plot_label=self.menu_section.analysis_window.plot_label)
+        elif self.option == "x-axis":
+            self.info.analysis_section.analyzer.plot(
+                    xlabel=self.menu_section.x_label_var.get(),
+                    configure=True, 
+                    plot_label=self.menu_section.analysis_window.plot_label)
+        elif self.option == "y-axis":
+            self.info.analysis_section.analyzer.plot(
+                    ylabel=self.menu_section.y_label_var.get(),
+                    configure=True, 
+                    plot_label=self.menu_section.analysis_window.plot_label)
+
+        # Destroy the window
         self.new_window.destroy()
 

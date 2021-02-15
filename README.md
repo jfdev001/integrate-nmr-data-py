@@ -1,10 +1,18 @@
 # integrate-nmr-data-py
-Basic Script to perform trapezoidal sum on NMR peak list data (*.asc)
+Tkinter GUI that performs trapezoidal sum on Nuclear Magnetic Resonance peak list data (*.asc) to get the area between a given range
 
 ## WHAT'S NEXT:
 -- How to organize toplevel widgets
    e.g. self.analysis_window in MainWindow
    and  self.plot_options_window in AnalysisWindow
+-- The organization for this is just not good at this point
+   too many method calls to keep track of things. What would be a good way to organize this? Draw diagrams and see how information is shared
+-- May be worth splitting all classes into separate files for 
+   readability purposes. Currently it's quite a lot of scrolling
+   to navigate.... unsure on this one.
+-- Display whole plot might be useful.
+   A scroll wheel for determining integration range would be
+   nice.
 
 ## Documentation:
    **Tkinter:**
