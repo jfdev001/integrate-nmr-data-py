@@ -102,9 +102,9 @@ class NmrAnalyzer:  # Make inherit from MainApp?
 
         # Outfile text
         now = str(datetime.now())[:str(datetime.now()).index(".")]
-        self.log_text = f"FILE PATH,TIME,AREA\n \
-                         {self.info.analysis_section.file_path}, \
-                         {now},{self.area}\n"
+        self.log_text = "FILE PATH,TIME,AREA\n" \
+                        + f"{self.info.analysis_section.file_path}," \
+                        + f"{now},{self.area}\n"
 
         return None
 

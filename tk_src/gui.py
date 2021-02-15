@@ -146,12 +146,10 @@ class AnalysisSection:
         self.info = info
 
         # Tuple (MyImage, str outfile)
-        self.analysis_result = None
+        self.analysis_result = []
 
         # <NmrAnalyzer object>
         self.analyzer = None
-
-        # <Widget.Toplevel object> 
 
         # LabelFrame
         self.frame = tk.LabelFrame(self.info.window, text="Analysis Frame", 
@@ -204,7 +202,11 @@ class AnalysisSection:
         self.analyzer = NmrAnalyzer(self.info)
 
         # Set Tuple (figure PhotoImage, str outfile) result                       
-        self.analysis_result = self.analyzer.proc_data()
+        temp = self.analyzer.proc_data()
+
+        # Set analysis result so that it's mutable
+        self.analysis_result.append(temp[0])  # <PlotImage object>
+        self.analysis_result.append(temp[1])  # str outfile
 
         # Create new window for matplotlib figure
         self.new_window()
@@ -239,8 +241,9 @@ class AnalysisWindow:
         self.new_window = new_window
         self.info = info
 
-        # Title
+        # Styling
         self.new_window.title("Data Analysis Window")
+        self.new_window.resizable(0,0)
 
         # Plot label
         plot = self.info.analysis_section.analysis_result[0].get_photoimage()
@@ -304,9 +307,10 @@ class MenuSection:
         self.save_options_menu.add_command(label="Save Both",
                                            command=self.save_both)
 
-        # Define single click menu for plot_options
-        self.plot_options_menu = tk.Menu(self.main_menu, tearoff=0,
-                                         postcommand=self.new_title)
+        # Define single cascading plot options menu
+        self.plot_options_menu = tk.Menu(self.main_menu, tearoff=0)
+        self.plot_options_menu.add_command(label="Change Labels",
+                                           command=self.new_window)
 
         # Add the cascading menus to the main_menu
         self.main_menu.add_cascade(label="Save Options", 
@@ -375,24 +379,6 @@ class MenuSection:
 
         return None
 
-    
-    def new_title(self):
-        """New title for matplotlib plot."""
-        # Call new_window function and instantiate <PlotWindow object>
-        self.new_window("title")
-
-        return None
-
-    
-    def new_ax(self, ax=None):
-        """New axis label for matplotlib plot."""
-        if (ax == "x"):
-            self.new_window("x-axis")
-        else:
-            self.new_window("y-axis")
-
-        return None
-
 
     def new_window(self, option=None):
         """Creates a window for plot options input. 
@@ -400,40 +386,56 @@ class MenuSection:
         This windows parent is the AnalysisWindow
         """
         self.plot_options_window = PlotOptionsWindow(tk.Toplevel(self.info.window),
-                               option=option, menu_section=self)
+                                                     menu_section=self)
 
 
 class PlotOptionsWindow:
-    def __init__(self, new_window=None, option=None, menu_section=None):
+    def __init__(self, new_window=None, menu_section=None):
         # Constructor
         self.new_window = new_window
-        self.option = option
         self.menu_section = menu_section
-        self.info = self.menu_section.info
+        self.info = menu_section.info
 
         # Styling
-        self.style = {"width": 40}
-        self.grid_style = {"padx": 2, "pady": 2, "ipady": 2, "ipadx": 2}
-        self.new_window.title("Plot Option")
+        self.grid_style = {"sticky": tk.W+tk.E, "padx": 2, "pady": 2, 
+                           "ipady": 2, "ipadx": 2}
+        self.new_window.title("Plot Options")
+        self.new_window.resizable(0, 0)
 
-        # Set the entry text
-        if self.option == "title":
-            self.entry = tk.Entry(self.new_window, 
+        # Title Entry Widget and Label
+        self.title_label = tk.Label(self.new_window, 
+                                    text="Title:",
+                                    relief=tk.RAISED,
+                                    bg="floral white")
+        self.title_entry = tk.Entry(self.new_window, 
                                   textvariable=self.menu_section.title_var,
-                                  **self.style)
-        elif self.option == "x-axis":
-            self.entry = tk.Entry(self.new_window, 
+                                  **self.info.entry_section.style)
+
+        # X-axis Entry Widget
+        self.x_axis_label = tk.Label(self.new_window,
+                                    text="X-Axis:",
+                                    relief=tk.RAISED,
+                                    bg="floral white")
+        self.x_axis_entry = tk.Entry(self.new_window, 
                                   textvariable=self.menu_section.x_label_var,
-                                  **self.style)
-        elif self.option == "y-axis":
-            self.entry = tk.Entry(self.new_window, 
+                                  **self.info.entry_section.style)
+
+        # Y-axis Entry Widget
+        self.y_axis_label = tk.Label(self.new_window,
+                                    text="Y-Axis:",
+                                    relief=tk.RAISED,
+                                    bg="floral white")                      
+        self.y_axis_entry = tk.Entry(self.new_window, 
                                   textvariable=self.menu_section.y_label_var,
-                                  **self.style)
+                                  **self.info.entry_section.style)
 
         # Button that 'submits' change i.e. updates exit loop
+        self.button_label = tk.Label(self.new_window, 
+                                    text="Submit:",
+                                    relief=tk.RAISED,
+                                    bg="floral white")
         self.button = tk.Button(self.new_window, text="Click to Submit Change",
                                 command=self.submit,
-                                **self.style,
                                 bg="bisque")
 
         # Grid Widgets
@@ -442,29 +444,34 @@ class PlotOptionsWindow:
 
     def grid_widgets(self):
         """Control geometry of widgets."""  
-        self.entry.grid(row=0, column=0, columnspan=3, **self.grid_style)
-        self.button.grid(row=1, column=1, **self.grid_style)
+        # Entry Widgets
+        self.title_label.grid(row=0, column=0, **self.grid_style)
+        self.title_entry.grid(row=0, column=1, **self.grid_style)
+        self.x_axis_label.grid(row=1, column=0, **self.grid_style)
+        self.x_axis_entry.grid(row=1, column=1, **self.grid_style)
+        self.y_axis_label.grid(row=2, column=0, **self.grid_style)
+        self.y_axis_entry.grid(row=2, column=1, **self.grid_style)
+
+        # Button Widget
+        self.button_label.grid(row=3, column=0, **self.grid_style)
+        self.button.grid(row=3, column=1, **self.grid_style)
 
     
     def submit(self):
         """Update plot and destroy this window."""
         # Which plot function to call
-        if self.option == "title":
-            self.info.analysis_section.analyzer.plot(
-                    title=self.menu_section.title_var.get(), 
-                    configure=True, 
-                    plot_label=self.menu_section.analysis_window.plot_label)
-        elif self.option == "x-axis":
-            self.info.analysis_section.analyzer.plot(
+        self.info.analysis_section.analyzer.plot(
+                    configure=True,
+                    title=self.menu_section.title_var.get(),
                     xlabel=self.menu_section.x_label_var.get(),
-                    configure=True, 
-                    plot_label=self.menu_section.analysis_window.plot_label)
-        elif self.option == "y-axis":
-            self.info.analysis_section.analyzer.plot(
                     ylabel=self.menu_section.y_label_var.get(),
-                    configure=True, 
                     plot_label=self.menu_section.analysis_window.plot_label)
 
+        # Update the analysis result with the newly changed <PlotImage object>
+        # in the <NmrAnalyzer object>.
+        self.info.analysis_section.analysis_result[0] = \
+                                   self.info.analysis_section.analyzer.plot_img
+       
         # Destroy the window
         self.new_window.destroy()
 
