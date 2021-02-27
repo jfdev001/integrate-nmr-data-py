@@ -2,6 +2,8 @@
 Tkinter GUI that performs trapezoidal sum on Nuclear Magnetic Resonance peak list data (ASC) to get the area between a given range.
 This is a personal project created to learn more about tkinter.
 
+![](demo.gif)
+
 ## Purpose: 
 This program parses the chemical shift and real intensity values 
 of NMR data (.asc format) into two separate lists. 
