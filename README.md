@@ -1,75 +1,6 @@
-# integrate-nmr-data-py
-Tkinter GUI that performs trapezoidal sum on Nuclear Magnetic Resonance peak list data (*.asc) to get the area between a given range
-
-## WHAT'S NEXT:
--- How to organize toplevel widgets
-   e.g. self.analysis_window in MainWindow
-   and  self.plot_options_window in AnalysisWindow
-   Possibly rename to toplevel1, toplevel2 etc.
--- The organization for this is just not good at this point
-   too many method calls to keep track of things. What would be a good way to organize this? Draw diagrams and see how information is shared
--- May be worth splitting all classes into separate files for 
-   readability purposes. Currently it's quite a lot of scrolling
-   to navigate.... unsure on this one.
--- Display whole plot might be useful.
-   A scroll wheel for determining integration range would be
-   nice.
-
-## Documentation:
-   **Tkinter:**
-   Canonical doc:
-      http://tcl.tk/man/tcl8.5/TkCmd/options.htm#M-wraplength
-
-   https://coderslegacy.com/python/python-gui/
-
-   https://www.python-course.eu/tkinter_dialogs.php
-
-   https://wiki.python.org/moin/TkInter
-
-   Matplotlib:
-   https://matplotlib.org/tutorials/introductory/usage.html#sphx-glr-tutorials-introductory-usage-py
-
-   
-
-## Questions:
-   ***On class structure***
-   https://stackoverflow.com/questions/19993795/how-would-i-access-variables-from-one-class-to-another
-
-   ***Get temp matplotlib figure:***
-   https://stackoverflow.com/questions/57316491/how-to-convert-matplotlib-figure-to-pil-image-object-without-saving-image
-
-   ***kwargs and class:***
-   https://stackoverflow.com/questions/8187082/how-can-you-set-class-attributes-from-variable-arguments-kwargs-in-python
-
-   ***tkinter frames:***
-   https://stackoverflow.com/questions/9759496/aligning-widgets-using-grid-between-multiple-tkinter-labelframes
-
-
-  ***git:***
-   https://stackoverflow.com/questions/5697750/what-exactly-does-the-u-do-git-push-u-origin-master-vs-git-push-origin-ma
-
-   https://stackoverflow.com/questions/52704/how-do-i-discard-unstaged-changes-in-git
-
-   ***gui:***
-      Icon Image:
-      Requires png or at the very least a file that has not had
-      it's extension changed.
-      https://www.geeksforgeeks.org/iconphoto-method-in-tkinter-python/
-
-      Dir Path:
-      https://help.pythonanywhere.com/pages/NoSuchFileOrDirectory/
-
-   ***string slicing:***
-      https://www.programiz.com/python-programming/methods/string/find
-
-      https://www.educative.io/edpresso/how-do-you-reverse-a-string-in-python
-
-
-## Plans:
-1. https://matplotlib.org/3.1.3/tutorials/introductory/usage.html#sphx-glr-tutorials-introductory-usage-py    
-2. Figure out how this integral is displayed!!
-   https://matplotlib.org/3.1.1/gallery/showcase/integral.html
-3. Improve file reading mechanism to stop when all needed data is integrated.
+# nmr-inte-great
+Tkinter GUI that performs trapezoidal sum on Nuclear Magnetic Resonance peak list data (ASC) to get the area between a given range.
+This is a personal project created to learn more about tkinter.
 
 ## Purpose: 
 This program parses the chemical shift and real intensity values 
@@ -97,13 +28,65 @@ I constructed a list of delta x's as follows:
 [x0 - x1, x1 - x2, (xn - 1) - xn] then summed that list and took the average
 to define delta x in the formula Tn.
 The sum from 2f(x1) + 2f(x2) + ... + 2f(xn−1) is calculated independently and
-then plugged into the trapezoidal sum formula Tn.
+then plugged into the trapezoidal sum formula.
 
-Validated Maths: numpy has composite trapezoidal rule function. Its 
-result matches my own.
+## Considerations:
+* How to organize toplevel widgets
+   e.g. self.analysis_window in MainWindow
+   and  self.plot_options_window in AnalysisWindow
+   Possibly rename to toplevel1, toplevel2 etc.
+* The organization for this is just not good at this point
+   too many method calls to keep track of things. What would be a good way to organize this? Draw diagrams and see how information is shared
+* May be worth splitting all classes into separate files for 
+   readability purposes. Currently it's quite a lot of scrolling
+   to navigate.... unsure on this one.
+* Display whole plot might be useful.
+   A scroll wheel for determining integration range would be
+   nice.
 
-9.2 mg/mL OA-QD
-20200410_JGF_Oleate-capped_CdSe_QD_PROTON.asc 
+## Documentation:
+   **Tkinter:**
+   * Canonical doc:
+      - http://tcl.tk/man/tcl8.5/TkCmd/options.htm#M-wraplength
 
-4.6 mg/mL OA-QD
-20200410_JGF_oleate-capped_CdSe_QD_Quality_Control_PROTON.asc
+   * https://coderslegacy.com/python/python-gui/
+
+   * https://www.python-course.eu/tkinter_dialogs.php
+
+   * https://wiki.python.org/moin/TkInter
+
+   **Matplotlib**
+   * https://matplotlib.org/tutorials/introductory/usage.html#sphx-glr-tutorials-introductory-usage-py
+
+
+## Questions:
+   ***On class structure***
+   * https://stackoverflow.com/questions/19993795/how-would-i-access-variables-from-one-class-to-another
+
+   ***Get temp matplotlib figure:***
+   * https://stackoverflow.com/questions/57316491/how-to-convert-matplotlib-figure-to-pil-image-object-without-saving-image
+
+   ***kwargs and class:***
+   * https://stackoverflow.com/questions/8187082/how-can-you-set-class-attributes-from-variable-arguments-kwargs-in-python
+
+   ***tkinter frames:***
+   * https://stackoverflow.com/questions/9759496/aligning-widgets-using-grid-between-multiple-tkinter-labelframes
+
+
+  ***git:***
+   * https://stackoverflow.com/questions/5697750/what-exactly-does-the-u-do-git-push-u-origin-master-vs-git-push-origin-ma
+
+   * https://stackoverflow.com/questions/52704/how-do-i-discard-unstaged-changes-in-git
+
+   ***misc gui:***
+   * Icon Image:
+      - https://www.geeksforgeeks.org/iconphoto-method-in-tkinter-python/
+
+   ***misc:***
+   * Dir Path:
+      - https://help.pythonanywhere.com/pages/NoSuchFileOrDirectory/
+
+   * string slicing:
+      - https://www.programiz.com/python-programming/methods/string/find
+
+      - https://www.educative.io/edpresso/how-do-you-reverse-a-string-in-python
